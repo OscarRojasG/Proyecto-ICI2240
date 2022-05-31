@@ -1,11 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "list.h"
 
 void mostrarMenu();
 void crearSopaTematica();
 void crearSopaPersonalizada();
 void mostrarSopas();
 void cargarSopa();
+
+// Funciones auxiliares
+FILE * abrirArchivoTema(char *tema);
+List * obtenerListaPalabras(FILE *archivo);
 
 int main()
 {
@@ -14,6 +20,7 @@ int main()
     {
         mostrarMenu();
         
+        printf("Ingrese una opción: ");
         fflush(stdin);
         scanf("%d", &opcion);
 
@@ -51,10 +58,57 @@ void mostrarMenu()
     printf("\n");
 }
 
+List * obtenerListaPalabras(FILE *archivo)
+{
+    List *list = createList();
+    char palabra[20];
+    while(fscanf(archivo, "%[^\n]", palabra) != EOF)
+    {
+        char *dynchar = strdup(palabra);
+        pushBack(list, dynchar);
+        fgetc(archivo);
+    }
+    return list;
+}
+
+FILE * abrirArchivoTema(char *tema)
+{
+    char directorio[30];
+    strcpy(directorio, "Temas/");
+    strcat(directorio, tema);
+    strcat(directorio, ".txt");
+
+    FILE *archivo = fopen(directorio, "r");
+    return archivo;
+}
+
 void crearSopaTematica()
 {
+    char tema[20];
 
+    printf("Ingrese un tema: ");
+    fflush(stdin);
+    scanf("%[^\n]", tema);
+
+    FILE *archivo = abrirArchivoTema(tema);
+    if(!archivo)
+    {
+        printf("Error: El tema ingresado no existe.\n");
+        return;
+    }
+
+    List *list = obtenerListaPalabras(archivo);
+    fclose(archivo);
+
+    char *palabra = firstList(list);
+    while(palabra)
+    {
+        printf("%s\n", palabra);
+        palabra = nextList(list);
+    }
 }
+
+
 
 void crearSopaPersonalizada()
 {
