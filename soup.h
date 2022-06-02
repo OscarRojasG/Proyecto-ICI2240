@@ -25,11 +25,11 @@ SopaLetras *crearSopaLetras(List *listaPalabras, int tamanio);
 
 char **inicializarTablero(int tamanio);
 
-int posicionEsValida(SopaLetras *sopa, Palabra *palabra);
+int posicionEsValida(SopaLetras *sopa, char *palabra);
 
-void insertarPalabra(SopaLetras *sopa, Palabra *palabra);
+void insertarPalabra(SopaLetras *sopa, char *palabra);
 
-void llenarEspacios(SopaLetras *sopa);
+void llenarTablero(SopaLetras *sopa);
 
 void mostrarTablero(SopaLetras *sopa);
 
