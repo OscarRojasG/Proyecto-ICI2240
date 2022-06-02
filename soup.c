@@ -1,13 +1,21 @@
 #include "soup.h"
 
-int crearSopaLetras(List *listaPalabras)
+SopaLetras *crearSopaLetras(List *listaPalabras, int tamanio)
 {
-    return 0;
+    SopaLetras *sopa = (SopaLetras *) malloc(sizeof(SopaLetras));
+    sopa->tamanio = tamanio;
+    sopa->total_palabras = 0;
+    sopa->tablero = inicializarTablero(tamanio);
+
+    return sopa;
 }
 
-void inicializarTablero(SopaLetras *sopa)
+char **inicializarTablero(int tamanio)
 {
-
+    char **tablero = (char **) malloc(sizeof(char *));
+    for(int i = 0; i < tamanio; i++)
+        tablero[i] = (char *) malloc(sizeof(char));
+    return tablero;
 }
 
 int posicionEsValida(SopaLetras *sopa, Palabra *palabra)
@@ -23,4 +31,15 @@ void insertarPalabra(SopaLetras *sopa, Palabra *palabra)
 void llenarTablero(SopaLetras *sopa)
 {
 
+}
+
+void mostrarTablero(SopaLetras *sopa)
+{
+    for(int i = 0; i < sopa->tamanio; i++)
+    {
+        for(int j = 0; j < sopa->tamanio; j++)
+            printf("%c ", sopa->tablero[i][j]);
+
+        printf("\n");
+    }
 }

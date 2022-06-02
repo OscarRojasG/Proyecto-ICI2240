@@ -1,6 +1,7 @@
 #ifndef SOUP_H
 #define SOUP_H
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
 
@@ -20,15 +21,17 @@ typedef struct {
 } SopaLetras;
 
 
-int crearSopaLetras(List *listaPalabras);
+SopaLetras *crearSopaLetras(List *listaPalabras, int tamanio);
 
-void inicializarTablero(SopaLetras *sopa);
+char **inicializarTablero(int tamanio);
 
 int posicionEsValida(SopaLetras *sopa, Palabra *palabra);
 
 void insertarPalabra(SopaLetras *sopa, Palabra *palabra);
 
 void llenarEspacios(SopaLetras *sopa);
+
+void mostrarTablero(SopaLetras *sopa);
 
 
 #endif

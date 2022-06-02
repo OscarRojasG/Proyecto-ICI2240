@@ -107,6 +107,9 @@ void crearSopaTematica()
         printf("%s\n", palabra);
         palabra = nextList(list);
     }
+
+    SopaLetras *sopa = crearSopaLetras(list, 10);
+    mostrarTablero(sopa);
 }
 
 
