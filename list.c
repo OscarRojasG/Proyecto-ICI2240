@@ -15,6 +15,7 @@ struct List {
     Node * head;
     Node * tail;
     Node * current;
+    int size;
 };
 
 typedef List List;
@@ -32,6 +33,7 @@ List * createList() {
      List * new = (List *)malloc(sizeof(List));
      assert(new != NULL);
      new->head = new->tail = new->current = NULL;
+     new->size = 0;
      return new;
 }
 
@@ -72,6 +74,7 @@ void pushFront(List * list, void * data) {
     }
     
     list->head = new;
+    list->size++;
 }
 
 void pushBack(List * list, void * data) {
@@ -95,6 +98,7 @@ void pushCurrent(List * list, void * data) {
     if(list->current==list->tail)
         list->tail=new;
 
+    list->size++;
 }
 
 void * popFront(List * list) {
@@ -131,6 +135,7 @@ void * popCurrent(List * list) {
         list->head = list->current->next;
         
     list->current = aux->prev;
+    list->size--;
 
     free(aux);
     
@@ -143,6 +148,10 @@ void cleanList(List * list) {
     while (list->head != NULL) {
         popFront(list);
     }
+}
+
+int getSize(List * list) {
+    return list->size;
 }
 
 

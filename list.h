@@ -31,6 +31,8 @@ void * popCurrent(List * list);
 
 void cleanList(List * list);
 
+int getSize(List * list);
+
 
 // Operaciones TDA Pila
 
