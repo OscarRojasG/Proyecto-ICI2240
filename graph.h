@@ -19,7 +19,7 @@ GraphNode* createGraphNode(SopaLetras *sopa, List *palabras, List *posiciones);
 
 GraphNode* copy(GraphNode* node);
 
-int is_valid(GraphNode* node);
+int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion);
 
 List* get_adj_nodes(GraphNode* node);
 

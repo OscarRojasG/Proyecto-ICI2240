@@ -17,14 +17,44 @@ GraphNode* copy(GraphNode* node)
     return new;
 }
 
-int is_valid(GraphNode* node)
+int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion)
 {
-    return 0;
+    return 1;
 }
 
 List* get_adj_nodes(GraphNode* node)
 {
-    return NULL;
+    List *adj_nodes = createList();
+
+    for(int i = 0; i < node->sopa->total_palabras; i++)
+    {
+        GraphNode *new = copy(node);
+        char *palabra = firstList(new->palabrasRestantes);
+        for(int n = 0; n == i; n++)
+            palabra = nextList(new->palabrasRestantes);
+
+        popCurrent(new->palabrasRestantes);
+
+        for(int j = 0; j < node->sopa->total_palabras; j++)
+        {
+            GraphNode *new2 = copy(new);
+            Posicion *posicion = firstList(new2->posicionesRestantes);
+            for(int n = 0; n == j; n++)
+                posicion = nextList(new2->posicionesRestantes);
+
+            popCurrent(new2->posicionesRestantes);
+
+            for(int k = 1; k <= 8; k++)
+            {
+                GraphNode *new3 = copy(new2);
+                int valid = fill_board(new3, palabra, posicion, k);
+                if(valid)
+                    pushBack(adj_nodes, new3);
+            }
+        }
+    }
+
+    return adj_nodes;
 }
 
 
