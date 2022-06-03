@@ -6,11 +6,15 @@
 #include "list.h"
 
 typedef struct {
+    int x;
+    int y;
+} Posicion;
+
+typedef struct {
     char *palabra;
     int largo;
     int orientacion;
-    int pos_x;
-    int pos_y;
+    Posicion *posicion;
 } Palabra;
 
 typedef struct {
@@ -21,13 +25,13 @@ typedef struct {
 } SopaLetras;
 
 
-SopaLetras *crearSopaLetras(List *listaPalabras, int tamanio);
+SopaLetras * crearSopaLetras(List *listaPalabras, int cantidadPalabras, int tamanio);
 
-char **inicializarTablero(int tamanio);
+char ** inicializarTablero(int tamanio);
 
-int posicionEsValida(SopaLetras *sopa, char *palabra);
+List * obtenerPosiciones(SopaLetras *sopa);
 
-void insertarPalabra(SopaLetras *sopa, char *palabra);
+void insertarPalabras(SopaLetras *sopa, List *listaPalabras, List *posiciones);
 
 void llenarTablero(SopaLetras *sopa);
 

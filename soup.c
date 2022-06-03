@@ -1,25 +1,21 @@
 #include "soup.h"
 
-SopaLetras *crearSopaLetras(List *listaPalabras, int tamanio)
+SopaLetras * crearSopaLetras(List *listaPalabras, int cantidadPalabras, int tamanio)
 {
     SopaLetras *sopa = (SopaLetras *) malloc(sizeof(SopaLetras));
     sopa->palabras = createList();
     sopa->tamanio = tamanio;
-    sopa->total_palabras = 0;
+    sopa->total_palabras = cantidadPalabras;
     sopa->tablero = inicializarTablero(tamanio);
 
-    char *palabra = firstList(listaPalabras);
-    while(palabra)
-    {
-        insertarPalabra(sopa, palabra);
-        palabra = nextList(listaPalabras);
-    }
+    List *posiciones = obtenerPosiciones(sopa);
+    insertarPalabras(sopa, listaPalabras, posiciones);
     llenarTablero(sopa);
 
     return sopa;
 }
 
-char **inicializarTablero(int tamanio)
+char ** inicializarTablero(int tamanio)
 {
     char **tablero = (char **) calloc(tamanio, sizeof(char *));
     for(int i = 0; i < tamanio; i++)
@@ -27,14 +23,37 @@ char **inicializarTablero(int tamanio)
     return tablero;
 }
 
-int posicionEsValida(SopaLetras *sopa, char *palabra)
+List * obtenerPosiciones(SopaLetras *sopa)
 {
-    return 0;
+    int cont = 0;
+    List *listaPosiciones = createList();
+    char **tmp = inicializarTablero(sopa->tamanio);
+
+    while(cont < sopa->total_palabras)
+    {
+        Posicion *posicion = (Posicion *) malloc(sizeof(Posicion));
+        posicion->x = rand() % sopa->tamanio;
+        posicion->y = rand() % sopa->tamanio;
+
+        if(tmp[posicion->x][posicion->y] == 'x')
+            continue;
+
+        tmp[posicion->x][posicion->y] = 'x';
+        pushBack(listaPosiciones, posicion);
+        cont++;
+    }
+
+    return listaPosiciones;
 }
 
-void insertarPalabra(SopaLetras *sopa, char *palabra)
+void insertarPalabras(SopaLetras *sopa, List *palabras, List *posiciones)
 {
-
+    Posicion *p = firstList(posiciones);
+    while(p)
+    {
+        printf("%d - %d\n", p->x, p->y);
+        p = nextList(posiciones);
+    }
 }
 
 void llenarTablero(SopaLetras *sopa)
