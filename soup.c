@@ -48,7 +48,7 @@ List * obtenerPosiciones(SopaLetras *sopa)
 
 void insertarPalabras(SopaLetras *sopa, List *palabras, List *posiciones)
 {
-    GraphNode *inicial = createGraphNode(sopa->tablero, sopa->tamanio, palabras, posiciones);
+    GraphNode *inicial = createGraphNode(sopa, palabras, posiciones);
     GraphNode *final = DFS(inicial);
 }
 

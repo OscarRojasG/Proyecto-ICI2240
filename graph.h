@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
+#include "soup.h"
 
 typedef struct {
-    char **tablero;
-    int tamanio;
+    SopaLetras *sopa;
     int intersecciones;
     int contDir[8];
     List *palabrasRestantes;
@@ -15,7 +15,7 @@ typedef struct {
 } GraphNode;
 
 
-GraphNode* createGraphNode(char **tablero, int tamanio, List *palabras, List *posiciones);
+GraphNode* createGraphNode(SopaLetras *sopa, List *palabras, List *posiciones);
 
 GraphNode* copy(GraphNode* node);
 

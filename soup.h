@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
-#include "graph.h"
 
 typedef struct {
     int x;
@@ -24,6 +23,8 @@ typedef struct {
     int total_palabras;
     List *palabras;
 } SopaLetras;
+
+#include "graph.h"
 
 
 SopaLetras * crearSopaLetras(List *listaPalabras, int cantidadPalabras, int tamanio);
