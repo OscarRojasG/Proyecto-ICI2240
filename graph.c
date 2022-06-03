@@ -1,5 +1,15 @@
 #include "graph.h"
 
+#define DIR_RIGHT 1
+#define DIR_LEFT 2
+#define DIR_DOWN 3
+#define DIR_UP 4
+#define DIR_RIGHT_DOWN 5
+#define DIR_RIGHT_UP 6
+#define DIR_LEFT_DOWN 7
+#define DIR_LEFT_UP 8
+
+
 GraphNode* createGraphNode(SopaLetras *sopa, List *palabras, List *posiciones)
 {
     GraphNode *node = (GraphNode *) calloc(1, sizeof(GraphNode));
@@ -17,8 +27,30 @@ GraphNode* copy(GraphNode* node)
     return new;
 }
 
+int can_be_inserted(GraphNode* node, char *palabra, Posicion *posicion, int orientacion)
+{
+    int word_size = strlen(palabra);
+
+    if(orientacion == DIR_RIGHT || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_RIGHT_UP)
+        if((posicion->x + word_size) > node->sopa->tamanio)
+            return 0;
+    if(orientacion == DIR_LEFT || orientacion == DIR_LEFT_DOWN || orientacion == DIR_LEFT_UP)
+        if((posicion->x - word_size + 1) < 0)
+            return 0;
+    if(orientacion == DIR_DOWN || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_LEFT_DOWN)
+        if((posicion->y + word_size) > node->sopa->tamanio)
+            return 0;
+    if(orientacion == DIR_UP || orientacion == DIR_RIGHT_UP || orientacion == DIR_LEFT_UP)
+        if((posicion->y - word_size + 1) < 0)
+            return 0;
+
+    return 1;
+}
+
 int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion)
 {
+    if(!can_be_inserted(node, palabra, posicion, orientacion))
+        return 0;
     return 1;
 }
 

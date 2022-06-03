@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "list.h"
 #include "soup.h"
 
@@ -20,6 +21,8 @@ GraphNode* createGraphNode(SopaLetras *sopa, List *palabras, List *posiciones);
 GraphNode* copy(GraphNode* node);
 
 int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion);
+
+int can_be_inserted(GraphNode* node, char *palabra, Posicion *posicion, int orientacion);
 
 List* get_adj_nodes(GraphNode* node);
 
