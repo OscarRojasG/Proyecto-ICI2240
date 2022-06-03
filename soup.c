@@ -48,12 +48,8 @@ List * obtenerPosiciones(SopaLetras *sopa)
 
 void insertarPalabras(SopaLetras *sopa, List *palabras, List *posiciones)
 {
-    Posicion *p = firstList(posiciones);
-    while(p)
-    {
-        printf("%d - %d\n", p->x, p->y);
-        p = nextList(posiciones);
-    }
+    GraphNode *inicial = createGraphNode(sopa->tablero, sopa->tamanio, palabras, posiciones);
+    GraphNode *final = DFS(inicial);
 }
 
 void llenarTablero(SopaLetras *sopa)
