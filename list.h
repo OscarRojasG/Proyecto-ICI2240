@@ -3,6 +3,10 @@
 
 typedef struct List List;
 
+typedef List Stack;
+
+// Operaciones TDA Lista
+
 List * createList(void);
 
 void * firstList(List * list);
@@ -27,6 +31,16 @@ void * popCurrent(List * list);
 
 void cleanList(List * list);
 
-void * getCurrent(List * list);
 
-#endif /* List_h */
+// Operaciones TDA Pila
+
+Stack* createStack();
+
+void pop(Stack* s);
+
+void* top(Stack* s);
+
+void push(Stack* s, void* data);
+
+
+#endif

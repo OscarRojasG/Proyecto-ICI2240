@@ -34,5 +34,26 @@ int is_final(GraphNode* node)
 
 GraphNode* DFS(GraphNode* initial)
 {
+    Stack *stack = createStack();
+    push(stack, initial);
 
+    while(top(stack))
+    {
+        GraphNode *node = top(stack);
+        pop(stack);
+
+        if(is_final(node)) return node;
+
+        List *adj_nodes = get_adj_nodes(node);
+        GraphNode *aux = firstList(adj_nodes);
+
+        while(aux)
+        {
+            push(stack, aux);
+            aux = nextList(adj_nodes);
+        }
+
+        free(node);
+    }
+    return NULL;
 }

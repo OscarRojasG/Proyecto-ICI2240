@@ -145,9 +145,19 @@ void cleanList(List * list) {
     }
 }
 
-void * getCurrent(List * list) {
-    if(list->current) {
-        return list->current->data;
-    }
-    return NULL;
+
+Stack* createStack() {
+    return createList();
+}
+
+void pop(Stack* s) {
+    popBack(s);
+}
+
+void* top(Stack* s) {
+    return lastList(s);
+}
+
+void push(Stack* s, void* data) {
+    pushBack(s, data);
 }
