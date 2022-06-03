@@ -2,7 +2,13 @@
 
 GraphNode* createGraphNode(char **tablero, int tamanio, List *palabras, List *posiciones)
 {
-    return NULL;
+    GraphNode *node = (GraphNode *) calloc(1, sizeof(GraphNode));
+    node->tablero = tablero;
+    node->tamanio = tamanio;
+    node->intersecciones = 0;
+    node->palabrasRestantes = palabras;
+    node->posicionesRestantes = posiciones;
+    return node;
 }
 
 GraphNode* copy(GraphNode* node)
