@@ -13,7 +13,9 @@ GraphNode* createGraphNode(char **tablero, int tamanio, List *palabras, List *po
 
 GraphNode* copy(GraphNode* node)
 {
-    return NULL;
+    GraphNode *new = (GraphNode *) malloc(sizeof(GraphNode));
+    *new = *node;
+    return new;
 }
 
 int is_valid(GraphNode* node)
@@ -29,7 +31,9 @@ List* get_adj_nodes(GraphNode* node)
 
 int is_final(GraphNode* node)
 {
-    return 0;
+    if(firstList(node->palabrasRestantes))
+        return 0;
+    return 1;
 }
 
 GraphNode* DFS(GraphNode* initial)
