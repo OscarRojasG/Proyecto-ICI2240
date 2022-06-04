@@ -50,6 +50,7 @@ void insertarPalabras(SopaLetras *sopa, List *palabras, List *posiciones)
 {
     GraphNode *inicial = createGraphNode(sopa, palabras, posiciones);
     GraphNode *final = DFS(inicial);
+    *sopa = *(final->sopa);
 }
 
 void llenarTablero(SopaLetras *sopa)

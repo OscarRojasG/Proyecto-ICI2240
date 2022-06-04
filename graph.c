@@ -23,9 +23,24 @@ GraphNode* createGraphNode(SopaLetras *sopa, List *palabras, List *posiciones)
 GraphNode* copy(GraphNode* node)
 {
     GraphNode *new = (GraphNode *) malloc(sizeof(GraphNode));
-    *new = *node;
+
+    new->sopa = (SopaLetras *) malloc(sizeof(SopaLetras));
+    new->sopa->palabras = copyList(node->sopa->palabras);
+    new->sopa->total_palabras = node->sopa->total_palabras;
+    new->sopa->tamanio = node->sopa->tamanio;
+
+    new->sopa->tablero = inicializarTablero(node->sopa->tamanio);
+    for(int i = 0; i < node->sopa->tamanio; i++)
+        for(int j = 0; j < node->sopa->tamanio; j++)
+            new->sopa->tablero[i][j] = node->sopa->tablero[i][j];
+
     new->palabrasRestantes = copyList(node->palabrasRestantes);
     new->posicionesRestantes = copyList(node->posicionesRestantes);
+    new->intersecciones = node->intersecciones;
+
+    for(int i = 0; i < 9; i++)
+        new->contDir[i] = node->contDir[i];
+
     return new;
 }
 
