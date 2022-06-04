@@ -27,7 +27,7 @@ typedef struct {
 #include "graph.h"
 
 
-SopaLetras * crearSopaLetras(List *listaPalabras, int cantidadPalabras, int tamanio);
+SopaLetras * crearSopaLetras(List *listaPalabras, int tamanio);
 
 char ** inicializarTablero(int tamanio);
 

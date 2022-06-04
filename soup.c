@@ -1,11 +1,11 @@
 #include "soup.h"
 
-SopaLetras * crearSopaLetras(List *listaPalabras, int cantidadPalabras, int tamanio)
+SopaLetras * crearSopaLetras(List *listaPalabras, int tamanio)
 {
     SopaLetras *sopa = (SopaLetras *) malloc(sizeof(SopaLetras));
     sopa->palabras = createList();
     sopa->tamanio = tamanio;
-    sopa->total_palabras = cantidadPalabras;
+    sopa->total_palabras = getSize(listaPalabras);
     sopa->tablero = inicializarTablero(tamanio);
 
     List *posiciones = obtenerPosiciones(sopa);
