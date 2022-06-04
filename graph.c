@@ -51,8 +51,32 @@ int can_be_inserted(GraphNode* node, char *palabra, Posicion *posicion, int orie
 
 int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion)
 {
-    //if(!can_be_inserted(node, palabra, posicion, orientacion))
-    //    return 0;
+    if(!can_be_inserted(node, palabra, posicion, orientacion))
+        return 0;
+
+    int n = 0, m = 0;
+    if(orientacion == DIR_RIGHT || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_RIGHT_UP)
+        n = 1;
+    if(orientacion == DIR_LEFT || orientacion == DIR_LEFT_DOWN || orientacion == DIR_LEFT_UP)
+        n = -1;
+    if(orientacion == DIR_DOWN || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_LEFT_DOWN)
+        m = 1;
+    if(orientacion == DIR_UP || orientacion == DIR_RIGHT_UP || orientacion == DIR_LEFT_UP)
+        m = -1;
+
+    int word_size = strlen(palabra);
+    for(int i = 0, j = 0, k = 0; k < word_size; i += n, j += m, k++)
+    {
+        char c = node->sopa->tablero[posicion->x + i][posicion->y + j];
+        if(c != '\0' && c != palabra[k]) return 0;
+
+        if(c == palabra[k])
+            node->intersecciones++;
+
+        node->sopa->tablero[posicion->x + i][posicion->y + j] = palabra[k];
+    }
+    node->contDir[orientacion]++;
+
     return 1;
 }
 
@@ -102,11 +126,12 @@ GraphNode* DFS(GraphNode* initial)
         GraphNode *node = top(stack);
         pop(stack);
 
-        if(is_final(node)) continue;
+        if(is_final(node)) return node;
 
         List *adj_nodes = get_adj_nodes(node);
-        GraphNode *aux = firstList(adj_nodes);
 
+        GraphNode *aux = firstList(adj_nodes);
+        
         while(aux)
         {
             push(stack, aux);

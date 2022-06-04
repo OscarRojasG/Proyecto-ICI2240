@@ -10,7 +10,7 @@ SopaLetras * crearSopaLetras(List *listaPalabras, int cantidadPalabras, int tama
 
     List *posiciones = obtenerPosiciones(sopa);
     insertarPalabras(sopa, listaPalabras, posiciones);
-    llenarTablero(sopa);
+    //llenarTablero(sopa);
 
     return sopa;
 }
