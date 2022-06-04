@@ -137,7 +137,7 @@ void * popCurrent(List * list) {
     list->current = aux->prev;
     list->size--;
 
-    free(aux);
+    // free(aux);
     
     return data;
 }
@@ -152,6 +152,16 @@ void cleanList(List * list) {
 
 int getSize(List * list) {
     return list->size;
+}
+
+List * copyList(List * list) {
+    List *new = createList();
+    void *data = firstList(list);
+    while(data) {
+        pushBack(new, data);
+        data = nextList(list);
+    }
+    return new;
 }
 
 

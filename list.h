@@ -9,6 +9,8 @@ typedef List Stack;
 
 List * createList(void);
 
+List * copyList(List *);
+
 void * firstList(List * list);
 
 void * nextList(List * list);

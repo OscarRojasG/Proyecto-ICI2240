@@ -24,6 +24,8 @@ GraphNode* copy(GraphNode* node)
 {
     GraphNode *new = (GraphNode *) malloc(sizeof(GraphNode));
     *new = *node;
+    new->palabrasRestantes = copyList(node->palabrasRestantes);
+    new->posicionesRestantes = copyList(node->posicionesRestantes);
     return new;
 }
 
@@ -49,46 +51,39 @@ int can_be_inserted(GraphNode* node, char *palabra, Posicion *posicion, int orie
 
 int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion)
 {
-    if(!can_be_inserted(node, palabra, posicion, orientacion))
-        return 0;
+    //if(!can_be_inserted(node, palabra, posicion, orientacion))
+    //    return 0;
     return 1;
 }
 
 List* get_adj_nodes(GraphNode* node)
 {
     List *adj_nodes = createList();
+    char *palabra = popFront(node->palabrasRestantes);
 
-    for(int i = 0; i < node->sopa->total_palabras; i++)
+    for(int i = 0; i < getSize(node->posicionesRestantes); i++)
     {
         GraphNode *new = copy(node);
-        char *palabra = firstList(new->palabrasRestantes);
-        for(int n = 0; n == i; n++)
-            palabra = nextList(new->palabrasRestantes);
+        Posicion *posicion = firstList(new->posicionesRestantes);
+        for(int n = 0; n < getSize(new->posicionesRestantes); n++)
+        {
+            if(n == i) break;
+            posicion = nextList(new->posicionesRestantes);
+        }
 
-        popCurrent(new->palabrasRestantes);
+        popCurrent(new->posicionesRestantes);
 
-        for(int j = 0; j < node->sopa->total_palabras; j++)
+        for(int k = 1; k <= 8; k++)
         {
             GraphNode *new2 = copy(new);
-            Posicion *posicion = firstList(new2->posicionesRestantes);
-            for(int n = 0; n == j; n++)
-                posicion = nextList(new2->posicionesRestantes);
-
-            popCurrent(new2->posicionesRestantes);
-
-            for(int k = 1; k <= 8; k++)
-            {
-                GraphNode *new3 = copy(new2);
-                int valid = fill_board(new3, palabra, posicion, k);
-                if(valid)
-                    pushBack(adj_nodes, new3);
-            }
+            int valid = fill_board(new2, palabra, posicion, k);
+            if(valid)
+                pushBack(adj_nodes, new2);
         }
     }
 
     return adj_nodes;
 }
-
 
 int is_final(GraphNode* node)
 {
@@ -107,7 +102,7 @@ GraphNode* DFS(GraphNode* initial)
         GraphNode *node = top(stack);
         pop(stack);
 
-        if(is_final(node)) return node;
+        if(is_final(node)) continue;
 
         List *adj_nodes = get_adj_nodes(node);
         GraphNode *aux = firstList(adj_nodes);
@@ -120,5 +115,6 @@ GraphNode* DFS(GraphNode* initial)
 
         free(node);
     }
+
     return NULL;
 }
