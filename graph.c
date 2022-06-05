@@ -64,20 +64,27 @@ int can_be_inserted(GraphNode* node, char *palabra, Posicion *posicion, int orie
     return 1;
 }
 
+void getIncrements(int *horizontal, int *vertical, int orientacion)
+{
+    *horizontal = 0, *vertical = 0;
+
+    if(orientacion == DIR_RIGHT || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_RIGHT_UP)
+        *horizontal = 1;
+    if(orientacion == DIR_LEFT || orientacion == DIR_LEFT_DOWN || orientacion == DIR_LEFT_UP)
+        *horizontal = -1;
+    if(orientacion == DIR_DOWN || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_LEFT_DOWN)
+        *vertical = 1;
+    if(orientacion == DIR_UP || orientacion == DIR_RIGHT_UP || orientacion == DIR_LEFT_UP)
+        *vertical = -1;
+}
+
 int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion)
 {
     if(!can_be_inserted(node, palabra, posicion, orientacion))
         return 0;
 
-    int n = 0, m = 0;
-    if(orientacion == DIR_RIGHT || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_RIGHT_UP)
-        n = 1;
-    if(orientacion == DIR_LEFT || orientacion == DIR_LEFT_DOWN || orientacion == DIR_LEFT_UP)
-        n = -1;
-    if(orientacion == DIR_DOWN || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_LEFT_DOWN)
-        m = 1;
-    if(orientacion == DIR_UP || orientacion == DIR_RIGHT_UP || orientacion == DIR_LEFT_UP)
-        m = -1;
+    int n, m;
+    getIncrements(&n, &m, orientacion);
 
     int word_size = strlen(palabra);
     for(int i = 0, j = 0, k = 0; k < word_size; i += n, j += m, k++)

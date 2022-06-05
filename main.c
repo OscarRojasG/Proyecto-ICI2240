@@ -109,7 +109,7 @@ void crearSopaTematica()
     }
 
     SopaLetras *sopa = crearSopaLetras(list, 10);
-    mostrarTablero(sopa);
+    mostrarSoluciones(sopa);
 }
 
 

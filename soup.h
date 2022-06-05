@@ -39,5 +39,7 @@ void llenarTablero(SopaLetras *sopa);
 
 void mostrarTablero(SopaLetras *sopa);
 
+void mostrarSoluciones(SopaLetras *sopa);
+
 
 #endif

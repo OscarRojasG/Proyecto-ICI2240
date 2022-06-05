@@ -10,7 +10,7 @@ SopaLetras * crearSopaLetras(List *listaPalabras, int tamanio)
 
     List *posiciones = obtenerPosiciones(sopa);
     insertarPalabras(sopa, listaPalabras, posiciones);
-    //llenarTablero(sopa);
+    llenarTablero(sopa);
 
     return sopa;
 }
@@ -75,3 +75,35 @@ void mostrarTablero(SopaLetras *sopa)
         printf("\n");
     }
 }
+
+void mostrarSoluciones(SopaLetras *sopa)
+{
+    char **tmp = inicializarTablero(sopa->tamanio);
+
+    Palabra *palabra = firstList(sopa->palabras);
+    while(palabra)
+    {
+        int n, m;
+        getIncrements(&n, &m, palabra->orientacion);
+
+        for(int i = 0, j = 0, k = 0; k < palabra->largo; i += n, j += m, k++)
+            tmp[palabra->posicion->x + i][palabra->posicion->y + j] = 'x';
+
+        palabra = nextList(sopa->palabras);
+    }
+
+    for(int i = 0; i < sopa->tamanio; i++)
+    {
+        for(int j = 0; j < sopa->tamanio; j++)
+        {
+            if(tmp[i][j] == 'x')
+                printf("\033[0;32m");
+            else
+                printf("\033[0m");
+
+            printf("%c ", sopa->tablero[i][j]);
+        }
+
+        printf("\n");
+    }
+}    

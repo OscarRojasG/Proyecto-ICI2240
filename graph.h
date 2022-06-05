@@ -28,6 +28,8 @@ int can_be_inserted(GraphNode* node, char *palabra, Posicion *posicion, int orie
 
 List* get_adj_nodes(GraphNode* node);
 
+void getIncrements(int *horizontal, int *vertical, int orientacion);
+
 int is_final(GraphNode* node);
 
 GraphNode* DFS(GraphNode* initial);
