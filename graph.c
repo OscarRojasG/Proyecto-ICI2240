@@ -92,7 +92,21 @@ int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientaci
     }
     node->contDir[orientacion]++;
 
+    Palabra *solucion = createWord(palabra, word_size, posicion, orientacion);
+    pushBack(node->sopa->palabras, solucion);
+
     return 1;
+}
+
+Palabra *createWord(char *palabra, int largo, Posicion *posicion, int orientacion)
+{
+    Palabra *solucion = (Palabra *) malloc(sizeof(Palabra));
+    solucion->palabra = palabra;
+    solucion->largo = largo;
+    solucion->posicion = posicion;
+    solucion->orientacion = orientacion;
+
+    return solucion;
 }
 
 List* get_adj_nodes(GraphNode* node)

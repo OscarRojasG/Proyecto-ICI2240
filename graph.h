@@ -22,6 +22,8 @@ GraphNode* copy(GraphNode* node);
 
 int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion);
 
+Palabra *createWord(char *palabra, int largo, Posicion *posicion, int orientacion);
+
 int can_be_inserted(GraphNode* node, char *palabra, Posicion *posicion, int orientacion);
 
 List* get_adj_nodes(GraphNode* node);
