@@ -3,3 +3,13 @@ gato
 conejo
 tortuga
 elefante
+zorro
+tigre
+cebra
+mono
+jirafa
+vaca
+caballo
+iguana
+cabra
+oveja

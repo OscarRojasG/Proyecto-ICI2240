@@ -108,7 +108,7 @@ void crearSopaTematica()
         palabra = nextList(list);
     }
 
-    SopaLetras *sopa = crearSopaLetras(list, 10);
+    SopaLetras *sopa = crearSopaLetras(list, 15);
     mostrarSoluciones(sopa);
 }
 

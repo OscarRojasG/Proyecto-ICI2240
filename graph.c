@@ -120,26 +120,14 @@ List* get_adj_nodes(GraphNode* node)
 {
     List *adj_nodes = createList();
     char *palabra = popFront(node->palabrasRestantes);
+    Posicion *posicion = popFront(node->posicionesRestantes);
 
-    for(int i = 0; i < getSize(node->posicionesRestantes); i++)
+    for(int k = 1; k <= 8; k++)
     {
         GraphNode *new = copy(node);
-        Posicion *posicion = firstList(new->posicionesRestantes);
-        for(int n = 0; n < getSize(new->posicionesRestantes); n++)
-        {
-            if(n == i) break;
-            posicion = nextList(new->posicionesRestantes);
-        }
-
-        popCurrent(new->posicionesRestantes);
-
-        for(int k = 1; k <= 8; k++)
-        {
-            GraphNode *new2 = copy(new);
-            int valid = fill_board(new2, palabra, posicion, k);
-            if(valid)
-                pushBack(adj_nodes, new2);
-        }
+        int valid = fill_board(new, palabra, posicion, k);
+        if(valid)
+            pushBack(adj_nodes, new);
     }
 
     return adj_nodes;
