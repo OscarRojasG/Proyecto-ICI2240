@@ -8,11 +8,14 @@ SopaLetras * crearSopaLetras(List *listaPalabras, int tamanio)
     sopa->total_palabras = getSize(listaPalabras);
     sopa->tablero = inicializarTablero(tamanio);
 
-    List *posiciones = obtenerPosiciones(sopa);
-    insertarPalabras(sopa, listaPalabras, posiciones);
-    llenarTablero(sopa);
+    int success = insertarPalabras(sopa, listaPalabras);
+    if(success)
+    {
+        llenarTablero(sopa);
+        return sopa;
+    }
 
-    return sopa;
+    return NULL;
 }
 
 char ** inicializarTablero(int tamanio)
@@ -46,11 +49,23 @@ List * obtenerPosiciones(SopaLetras *sopa)
     return listaPosiciones;
 }
 
-void insertarPalabras(SopaLetras *sopa, List *palabras, List *posiciones)
+int insertarPalabras(SopaLetras *sopa, List *palabras)
 {
-    GraphNode *inicial = createGraphNode(sopa, palabras, posiciones);
-    GraphNode *final = DFS(inicial);
-    *sopa = *(final->sopa);
+    GraphNode *inicial, *final;
+    for(int i = 0; i < 5; i++)
+    {
+        List *posiciones = obtenerPosiciones(sopa);
+        inicial = createGraphNode(sopa, palabras, posiciones);
+        final = DFS(inicial);
+
+        if(final) 
+        {
+            *sopa = *(final->sopa);
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 void llenarTablero(SopaLetras *sopa)

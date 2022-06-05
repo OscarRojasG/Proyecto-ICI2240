@@ -33,7 +33,7 @@ char ** inicializarTablero(int tamanio);
 
 List * obtenerPosiciones(SopaLetras *sopa);
 
-void insertarPalabras(SopaLetras *sopa, List *listaPalabras, List *posiciones);
+int insertarPalabras(SopaLetras *sopa, List *listaPalabras);
 
 void llenarTablero(SopaLetras *sopa);
 
