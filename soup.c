@@ -106,4 +106,5 @@ void mostrarSoluciones(SopaLetras *sopa)
 
         printf("\n");
     }
+    printf("\033[0m");
 }    
