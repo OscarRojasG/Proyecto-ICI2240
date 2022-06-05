@@ -32,8 +32,6 @@ void getIncrements(int *horizontal, int *vertical, int orientacion);
 
 int is_final(GraphNode* node);
 
-int get_score(GraphNode *node);
-
 GraphNode* DFS(GraphNode* initial);
 
 

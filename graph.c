@@ -83,6 +83,9 @@ int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientaci
     if(!can_be_inserted(node, palabra, posicion, orientacion))
         return 0;
 
+    if(node->contDir[orientacion] == ((node->sopa->total_palabras - 1) / 8 + 2))
+        return 0;
+
     int n, m;
     getIncrements(&n, &m, orientacion);
 
@@ -140,33 +143,8 @@ int is_final(GraphNode* node)
     return 1;
 }
 
-int get_score(GraphNode *node)
-{
-    int score = 0;
-    int all_diff = 1;
-    for(int i = 1; i <= 8; i++) {
-        if(node->contDir[i] > 1)
-            all_diff = 0;
-
-        if(i <= 4)
-            score += node->contDir[i] * 1;
-        else
-            score += node->contDir[i] * 3;
-    }
-
-    if(all_diff)
-        score += 6;
-
-    score += node->intersecciones * 2;
-
-    return score;
-}
-
 GraphNode* DFS(GraphNode* initial)
 {
-    int bestScore = 0;
-    GraphNode *bestNode = NULL;
-
     Stack *stack = createStack();
     push(stack, initial);
 
@@ -175,16 +153,8 @@ GraphNode* DFS(GraphNode* initial)
         GraphNode *node = top(stack);
         pop(stack);
 
-        if(is_final(node))
-        {
-            int score = get_score(node);
-            if(score > bestScore) {
-                free(bestNode);
-                bestNode = node;
-                bestScore = score;
-            }
-            continue;
-        }
+        if(is_final(node)) 
+            return node;
 
         List *adj_nodes = get_adj_nodes(node);
 
@@ -199,5 +169,5 @@ GraphNode* DFS(GraphNode* initial)
         free(node);
     }
 
-    return bestNode;
+    return NULL;
 }
