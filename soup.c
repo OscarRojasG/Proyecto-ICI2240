@@ -1,5 +1,8 @@
 #include "soup.h"
 
+#define COLOR_GREEN "\x1B[32m"
+#define COLOR_RESET "\x1B[0m"
+
 SopaLetras * crearSopaLetras(List *listaPalabras, int tamanio)
 {
     SopaLetras *sopa = (SopaLetras *) malloc(sizeof(SopaLetras));
@@ -107,19 +110,28 @@ void mostrarSoluciones(SopaLetras *sopa)
         palabra = nextList(sopa->palabras);
     }
 
+    int colored = 0;
     for(int i = 0; i < sopa->tamanio; i++)
     {
         for(int j = 0; j < sopa->tamanio; j++)
         {
-            if(tmp[i][j] == 'x')
-                printf("\033[0;32m");
-            else
-                printf("\033[0m");
+            if(tmp[i][j] == 'x' && !colored)
+            {
+                printf("%s", COLOR_GREEN);
+                colored = 1;
+            }
+            if(tmp[i][j] != 'x' && colored)
+            {
+                printf("%s", COLOR_RESET);
+                colored = 0;
+            }
 
             printf("%c ", sopa->tablero[i][j]);
         }
 
         printf("\n");
     }
-    printf("\033[0m");
+    
+    if(colored)
+        printf("%s", COLOR_RESET);
 }    
