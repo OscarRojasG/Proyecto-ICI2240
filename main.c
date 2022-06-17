@@ -4,6 +4,7 @@
 #include "list.h"
 #include "soup.h"
 #include "util.h"
+#include "hashmap.h"
 
 void mostrarMenu();
 void crearSopaTematica();
@@ -15,8 +16,13 @@ void cargarSopa();
 FILE * abrirArchivoTema(char *tema);
 List * obtenerListaPalabras(FILE *archivo);
 
+// Variables globales
+HashMap * mapaTemas;
+
 int main()
 {
+    mapaTemas = createMap(10);
+
     int opcion = 0;
     while(opcion != 5)
     {
