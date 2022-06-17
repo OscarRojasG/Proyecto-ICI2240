@@ -41,5 +41,6 @@ void mostrarTablero(SopaLetras *sopa);
 
 void mostrarSoluciones(SopaLetras *sopa);
 
+void mostrarPalabras(SopaLetras* sopa);
 
 #endif

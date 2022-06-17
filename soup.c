@@ -134,4 +134,16 @@ void mostrarSoluciones(SopaLetras *sopa)
     
     if(colored)
         printf("%s", COLOR_RESET);
-}    
+}
+
+void mostrarPalabras(SopaLetras* sopa)
+{
+    Palabra* palabra = firstList(sopa->palabras);
+
+    while (palabra)
+    {
+        printf("%s\n", palabra->palabra);
+
+        palabra = nextList(sopa->palabras);
+    }
+}

@@ -10,6 +10,10 @@ void crearSopaTematica();
 void crearSopaPersonalizada();
 void mostrarSopas();
 void cargarSopa();
+void exportarSopa();
+void mostrarSubmenuCrear(SopaLetras* sopa);
+void mostrarSubmenuCargar(SopaLetras* sopa);
+
 
 // Funciones auxiliares
 List * obtenerPalabrasTema(char *tema);
@@ -175,10 +179,12 @@ void crearSopaTematica()
 
     SopaLetras *sopa = crearSopaLetras(palabrasSopa, tamanioTablero);
 
-    if(sopa == NULL)
+    /*if(sopa == NULL)
         printf("Ocurrió un error al generar la sopa de letras. Inténtalo de nuevo.\n");
     else
-        mostrarSoluciones(sopa);
+        mostrarSoluciones(sopa);*/
+
+    mostrarSubmenuCrear(sopa);
 }
 
 
@@ -196,4 +202,82 @@ void mostrarSopas()
 void cargarSopa()
 {
 
+}
+
+void exportarSopa()
+{
+
+}
+
+void eliminarSopa()
+{
+
+}
+
+void mostrarSubmenuCrear(SopaLetras* sopa)
+{
+    int opcion = 0;
+    
+    while(opcion != 4)
+    {
+        printf("1.- Ver palabras ocultas\n");
+        printf("2.- Mostrar soluciones\n");
+        printf("3.- Exportar\n");
+        printf("4.- Salir\n\n");
+
+        fflush(stdin);
+        scanf("%d", &opcion);
+
+        switch (opcion)
+        {
+            case 1:
+                mostrarPalabras(sopa);
+            break;
+
+            case 2:
+                mostrarSoluciones(sopa);
+            break;
+
+            case 3:
+                exportarSopa(sopa);
+            break;
+    
+            default:
+            break;
+        }
+    }
+}
+
+void mostrarSubmenuCarga(SopaLetras* sopa)
+{
+   int opcion = 0;
+
+    while(opcion != 4)
+    {
+        printf("1.- Ver palabras ocultas\n");
+        printf("2.- Mostrar soluciones\n");
+        printf("3.- Eliminar\n");
+        printf("4.- Salir\n\n");
+
+        fflush(stdin);
+        scanf("%d", &opcion);
+
+        switch (opcion)
+        {
+            case 1:
+                mostrarPalabras(sopa);
+            break;
+
+            case 2:
+                mostrarSoluciones(sopa);
+            break;
+
+            case 3:
+                eliminarSopa(sopa);
+            break;
+    
+            default:
+            break;
+        }
+    }
 }
