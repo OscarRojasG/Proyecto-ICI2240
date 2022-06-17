@@ -15,6 +15,7 @@ void cargarSopa();
 List * obtenerPalabrasTema(char *tema);
 FILE * abrirArchivoTema(char *tema);
 List * leerPalabrasArchivo(FILE *archivo);
+List * obtenerPalabrasValidas(List *list, int largoMax);
 List * obtenerPalabrasAleatorias(List *list, int numPalabras);
 
 // Variables globales
@@ -110,7 +111,22 @@ List * obtenerPalabrasTema(char *tema)
     return palabrasTema;
 }
 
-List * obtenerPalabrasAleatorias(List * list, int numPalabras) {
+List * obtenerPalabrasValidas(List *list, int largoMax)
+{
+    List *new = createList();
+    char *palabra = (char *) firstList(list);
+    while(palabra)
+    {
+        if(strlen(palabra) <= largoMax)
+            pushBack(new, palabra);
+        palabra = nextList(list);
+    }
+
+    return new;
+}
+
+List * obtenerPalabrasAleatorias(List * list, int numPalabras)
+{
     if(numPalabras >= getSize(list))
         return list;
 
@@ -144,6 +160,8 @@ List * obtenerPalabrasAleatorias(List * list, int numPalabras) {
 void crearSopaTematica()
 {
     char tema[20];
+    int cantidadPalabras = 10;
+    int tamanioTablero = 15;
 
     printf("Ingrese un tema: ");
     fflush(stdin);
@@ -152,9 +170,10 @@ void crearSopaTematica()
     List *palabrasTema = obtenerPalabrasTema(tema);
     if(!palabrasTema) return;
 
-    List *palabrasSopa = obtenerPalabrasAleatorias(palabrasTema, 15);
+    List *palabrasValidas = obtenerPalabrasValidas(palabrasTema, tamanioTablero);
+    List *palabrasSopa = obtenerPalabrasAleatorias(palabrasValidas, cantidadPalabras);
 
-    SopaLetras *sopa = crearSopaLetras(palabrasSopa, 15);
+    SopaLetras *sopa = crearSopaLetras(palabrasSopa, tamanioTablero);
 
     if(sopa == NULL)
         printf("Ocurrió un error al generar la sopa de letras. Inténtalo de nuevo.\n");
