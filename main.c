@@ -13,8 +13,9 @@ void mostrarSopas();
 void cargarSopa();
 
 // Funciones auxiliares
+List * obtenerPalabrasTema(char *tema);
 FILE * abrirArchivoTema(char *tema);
-List * obtenerListaPalabras(FILE *archivo);
+List * leerPalabrasArchivo(FILE *archivo);
 
 // Variables globales
 HashMap * mapaTemas;
@@ -66,7 +67,7 @@ void mostrarMenu()
     printf("\n");
 }
 
-List * obtenerListaPalabras(FILE *archivo)
+List * leerPalabrasArchivo(FILE *archivo)
 {
     List *list = createList();
     char palabra[20];
@@ -90,6 +91,25 @@ FILE * abrirArchivoTema(char *tema)
     return archivo;
 }
 
+List * obtenerPalabrasTema(char *tema)
+{
+    Pair *pair = searchMap(mapaTemas, tema);
+    if(pair) return (List *) pair->value;
+
+    FILE *archivo = abrirArchivoTema(tema);
+    if(!archivo)
+    {
+        printf("Error: El tema ingresado no existe.\n");
+        return NULL;
+    }
+
+    List *palabrasTema = leerPalabrasArchivo(archivo);
+    insertMap(mapaTemas, tema, palabrasTema);
+    fclose(archivo);
+    
+    return palabrasTema;
+}
+
 void crearSopaTematica()
 {
     char tema[20];
@@ -98,24 +118,10 @@ void crearSopaTematica()
     fflush(stdin);
     scanf("%[^\n]", tema);
 
-    FILE *archivo = abrirArchivoTema(tema);
-    if(!archivo)
-    {
-        printf("Error: El tema ingresado no existe.\n");
-        return;
-    }
-
-    List *palabrasTema = obtenerListaPalabras(archivo);
-    fclose(archivo);
+    List *palabrasTema = obtenerPalabrasTema(tema);
+    if(!palabrasTema) return;
 
     List *palabrasSopa = getRandomElements(palabrasTema, 15);
-
-    char *palabra = firstList(palabrasSopa);
-    while(palabra)
-    {
-        printf("%s\n", palabra);
-        palabra = nextList(palabrasSopa);
-    }
 
     SopaLetras *sopa = crearSopaLetras(palabrasSopa, 15);
 
