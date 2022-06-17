@@ -9,7 +9,9 @@ typedef List Stack;
 
 List * createList(void);
 
-List * copyList(List *);
+List * copyList(List * list);
+
+List * getRandomElements(List * list, int n);
 
 void * firstList(List * list);
 

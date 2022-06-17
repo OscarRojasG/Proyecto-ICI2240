@@ -137,7 +137,7 @@ void * popCurrent(List * list) {
     list->current = aux->prev;
     list->size--;
 
-    // free(aux);
+    free(aux);
     
     return data;
 }
@@ -161,6 +161,37 @@ List * copyList(List * list) {
         pushBack(new, data);
         data = nextList(list);
     }
+    return new;
+}
+
+List * getRandomElements(List * list, int n) {
+    if(n >= list->size)
+        return list;
+
+    List *new = createList();
+    int max_rand = list->size / n;
+    if((list->size % n) == 0)
+        max_rand -= 1;
+
+    int *addedNodes = (int *) calloc(list->size, sizeof(int));
+
+    while(new->size < n) {
+        void *data = firstList(list);
+        int pos = 0;
+
+        while(data && (new->size < n)) {
+            int r = rand() % max_rand;
+            if(r == 0 && addedNodes[pos] == 0)
+            {
+                pushBack(new, data);
+                addedNodes[pos] = 1;
+            }
+            data = nextList(list);
+            pos++;
+        }
+    }
+
+    free(addedNodes);
     return new;
 }
 

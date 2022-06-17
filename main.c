@@ -98,17 +98,19 @@ void crearSopaTematica()
         return;
     }
 
-    List *list = obtenerListaPalabras(archivo);
+    List *palabrasTema = obtenerListaPalabras(archivo);
     fclose(archivo);
 
-    char *palabra = firstList(list);
+    List *palabrasSopa = getRandomElements(palabrasTema, 15);
+
+    char *palabra = firstList(palabrasSopa);
     while(palabra)
     {
         printf("%s\n", palabra);
-        palabra = nextList(list);
+        palabra = nextList(palabrasSopa);
     }
 
-    SopaLetras *sopa = crearSopaLetras(list, 15);
+    SopaLetras *sopa = crearSopaLetras(palabrasSopa, 15);
 
     if(sopa == NULL)
         printf("Ocurrió un error al generar la sopa de letras. Inténtalo de nuevo.\n");
