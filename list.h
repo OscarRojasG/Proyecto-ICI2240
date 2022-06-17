@@ -11,8 +11,6 @@ List * createList(void);
 
 List * copyList(List * list);
 
-List * getRandomElements(List * list, int n);
-
 void * firstList(List * list);
 
 void * nextList(List * list);

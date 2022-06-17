@@ -3,6 +3,7 @@
 #include <string.h>
 #include "list.h"
 #include "soup.h"
+#include "util.h"
 
 void mostrarMenu();
 void crearSopaTematica();
