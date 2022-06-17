@@ -9,7 +9,6 @@
 
 typedef struct {
     SopaLetras *sopa;
-    int intersecciones;
     int contDir[9];
     List *palabrasRestantes;
     List *posicionesRestantes;

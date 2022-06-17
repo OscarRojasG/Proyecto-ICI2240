@@ -14,7 +14,6 @@ GraphNode* createGraphNode(SopaLetras *sopa, List *palabras, List *posiciones)
 {
     GraphNode *node = (GraphNode *) calloc(1, sizeof(GraphNode));
     node->sopa = sopa;
-    node->intersecciones = 0;
     node->palabrasRestantes = palabras;
     node->posicionesRestantes = posiciones;
     return node;
@@ -36,7 +35,6 @@ GraphNode* copy(GraphNode* node)
 
     new->palabrasRestantes = copyList(node->palabrasRestantes);
     new->posicionesRestantes = copyList(node->posicionesRestantes);
-    new->intersecciones = node->intersecciones;
 
     for(int i = 0; i < 9; i++)
         new->contDir[i] = node->contDir[i];
@@ -94,9 +92,6 @@ int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientaci
     {
         char c = node->sopa->tablero[posicion->x + i][posicion->y + j];
         if(c != '\0' && c != palabra[k]) return 0;
-
-        if(c == palabra[k])
-            node->intersecciones++;
 
         node->sopa->tablero[posicion->x + i][posicion->y + j] = palabra[k];
     }
