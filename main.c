@@ -3,7 +3,6 @@
 #include <string.h>
 #include "list.h"
 #include "soup.h"
-#include "util.h"
 #include "hashmap.h"
 
 void mostrarMenu();
@@ -16,6 +15,7 @@ void cargarSopa();
 List * obtenerPalabrasTema(char *tema);
 FILE * abrirArchivoTema(char *tema);
 List * leerPalabrasArchivo(FILE *archivo);
+List * obtenerPalabrasAleatorias(List *list, int numPalabras);
 
 // Variables globales
 HashMap * mapaTemas;
@@ -110,6 +110,37 @@ List * obtenerPalabrasTema(char *tema)
     return palabrasTema;
 }
 
+List * obtenerPalabrasAleatorias(List * list, int numPalabras) {
+    if(numPalabras >= getSize(list))
+        return list;
+
+    List *new = createList();
+    int max_rand = getSize(list) / numPalabras;
+    if((getSize(list) % numPalabras) == 0)
+        max_rand -= 1;
+
+    int *posicionesInvalidas = (int *) calloc(getSize(list), sizeof(int));
+
+    while(getSize(new) < numPalabras) {
+        void *data = firstList(list);
+        int pos = 0;
+
+        while(data && (getSize(new) < numPalabras)) {
+            int r = rand() % max_rand;
+            if(r == 0 && posicionesInvalidas[pos] == 0)
+            {
+                pushBack(new, data);
+                posicionesInvalidas[pos] = 1;
+            }
+            data = nextList(list);
+            pos++;
+        }
+    }
+
+    free(posicionesInvalidas);
+    return new;
+}
+
 void crearSopaTematica()
 {
     char tema[20];
@@ -121,7 +152,7 @@ void crearSopaTematica()
     List *palabrasTema = obtenerPalabrasTema(tema);
     if(!palabrasTema) return;
 
-    List *palabrasSopa = getRandomElements(palabrasTema, 15);
+    List *palabrasSopa = obtenerPalabrasAleatorias(palabrasTema, 15);
 
     SopaLetras *sopa = crearSopaLetras(palabrasSopa, 15);
 
