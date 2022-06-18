@@ -164,8 +164,8 @@ List * obtenerPalabrasAleatorias(List * list, int numPalabras)
 void crearSopaTematica()
 {
     char tema[20];
-    int cantidadPalabras = 10;
-    int tamanioTablero = 15;
+    int cantidadPalabras = 18;
+    int tamanioTablero = 18;
 
     printf("Ingrese un tema: ");
     fflush(stdin);

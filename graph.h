@@ -19,7 +19,9 @@ GraphNode* createGraphNode(SopaLetras *sopa, List *palabras, List *posiciones);
 
 GraphNode* copy(GraphNode* node);
 
-int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion);
+char ** copy_board(char **tablero, int tamanio);
+
+char ** fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion);
 
 Palabra *createWord(char *palabra, int largo, Posicion *posicion, int orientacion);
 

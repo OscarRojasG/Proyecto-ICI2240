@@ -76,31 +76,49 @@ void getIncrements(int *horizontal, int *vertical, int orientacion)
         *vertical = -1;
 }
 
-int fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion)
+char ** copy_board(char **tablero, int tamanio)
+{
+    char **new = (char **) malloc(tamanio * sizeof(char *));
+
+    for(int i = 0; i < tamanio; i++)
+    {
+        new[i] = (char *) malloc(tamanio * sizeof(char));
+
+        for(int j = 0; j < tamanio; j++)
+            new[i][j] = tablero[i][j];
+    }
+
+    return new;
+}
+
+char ** fill_board(GraphNode *node, char *palabra, Posicion *posicion, int orientacion)
 {
     if(!can_be_inserted(node, palabra, posicion, orientacion))
-        return 0;
+        return NULL;
 
     if(node->contDir[orientacion] == ((node->sopa->total_palabras - 1) / 8 + 2))
-        return 0;
+        return NULL;
 
     int n, m;
     getIncrements(&n, &m, orientacion);
+    char **aux = copy_board(node->sopa->tablero, node->sopa->tamanio);
 
-    int word_size = strlen(palabra);
-    for(int i = 0, j = 0, k = 0; k < word_size; i += n, j += m, k++)
+    for(int i = 0, j = 0, k = 0; palabra[k] != '\0'; i += n, j += m, k++)
     {
-        char c = node->sopa->tablero[posicion->x + i][posicion->y + j];
-        if(c != '\0' && c != palabra[k]) return 0;
+        char c = aux[posicion->x + i][posicion->y + j];
+        if(c != '\0' && c != palabra[k])
+        {
+            for(int i = 0; i < node->sopa->tamanio; i++)
+                free(aux[i]);
+            free(aux);
 
-        node->sopa->tablero[posicion->x + i][posicion->y + j] = palabra[k];
+            return NULL;
+        }
+
+        aux[posicion->x + i][posicion->y + j] = palabra[k];
     }
-    node->contDir[orientacion]++;
 
-    Palabra *solucion = createWord(palabra, word_size, posicion, orientacion);
-    pushBack(node->sopa->palabras, solucion);
-
-    return 1;
+    return aux;
 }
 
 Palabra *createWord(char *palabra, int largo, Posicion *posicion, int orientacion)
@@ -119,13 +137,23 @@ List* get_adj_nodes(GraphNode* node)
     List *adj_nodes = createList();
     char *palabra = popFront(node->palabrasRestantes);
     Posicion *posicion = popFront(node->posicionesRestantes);
+    int largo = strlen(palabra);
 
     for(int k = 1; k <= 8; k++)
     {
-        GraphNode *new = copy(node);
-        int valid = fill_board(new, palabra, posicion, k);
-        if(valid)
+        char **tablero = fill_board(node, palabra, posicion, k);
+    
+        if(tablero)
+        {
+            GraphNode *new = copy(node);
+
+            Palabra *solucion = createWord(palabra, largo, posicion, k);
+            pushBack(new->sopa->palabras, solucion);
+            new->sopa->tablero = tablero;
+            new->contDir[k]++;
+
             pushBack(adj_nodes, new);
+        }
     }
 
     return adj_nodes;
