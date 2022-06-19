@@ -13,25 +13,27 @@ typedef struct {
 } GraphNode;
 
 
-GraphNode* createGraphNode(SopaLetras *sopa, List *palabras, List *posiciones);
+GraphNode * create_graph_node(SopaLetras *sopa);
 
-GraphNode* copy(GraphNode* node);
+GraphNode * copy_node(GraphNode *node);
 
 char ** copy_board(char **tablero, int tamanio);
 
+int is_balanced(GraphNode *node, int orientacion);
+
+int can_be_inserted(SopaLetras *sopa, int largo_palabra, Posicion *posicion, int orientacion);
+
+void get_increments(int *horizontal, int *vertical, int orientacion);
+
 char ** fill_board(GraphNode* node, char *palabra, Posicion *posicion, int orientacion);
 
-Palabra *createWord(char *palabra, int largo, Posicion *posicion, int orientacion);
+Palabra * create_word(char *palabra, int largo, Posicion *posicion, int orientacion);
 
-int can_be_inserted(GraphNode* node, char *palabra, Posicion *posicion, int orientacion);
-
-List* get_adj_nodes(GraphNode* node, List *listaPalabras, List *listaPosiciones);
-
-void getIncrements(int *horizontal, int *vertical, int orientacion);
+List * get_adj_nodes(GraphNode* node, List *listaPalabras, List *listaPosiciones);
 
 int is_final(GraphNode* node);
 
-GraphNode* DFS(GraphNode* initial, List *palabras, List *posiciones);
+GraphNode * DFS(GraphNode* initial, List *palabras, List *posiciones);
 
 
 #endif

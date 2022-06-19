@@ -58,7 +58,7 @@ int insertarPalabras(SopaLetras *sopa, List *palabras)
     for(int i = 0; i < 5; i++)
     {
         List *posiciones = obtenerPosiciones(sopa);
-        inicial = createGraphNode(sopa, palabras, posiciones);
+        inicial = create_graph_node(sopa);
         final = DFS(inicial, palabras, posiciones);
 
         if(final) 
@@ -102,7 +102,7 @@ void mostrarSoluciones(SopaLetras *sopa)
     while(palabra)
     {
         int n, m;
-        getIncrements(&n, &m, palabra->orientacion);
+        get_increments(&n, &m, palabra->orientacion);
 
         for(int i = 0, j = 0, k = 0; k < palabra->largo; i += n, j += m, k++)
             tmp[palabra->posicion->x + i][palabra->posicion->y + j] = 'x';

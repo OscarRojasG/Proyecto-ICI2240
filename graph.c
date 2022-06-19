@@ -10,14 +10,14 @@
 #define DIR_LEFT_UP 8
 
 
-GraphNode* createGraphNode(SopaLetras *sopa, List *palabras, List *posiciones)
+GraphNode* create_graph_node(SopaLetras *sopa)
 {
     GraphNode *node = (GraphNode *) calloc(1, sizeof(GraphNode));
     node->sopa = sopa;
     return node;
 }
 
-GraphNode* copy(GraphNode* node)
+GraphNode* copy_node(GraphNode *node)
 {
     GraphNode *new = (GraphNode *) malloc(sizeof(GraphNode));
 
@@ -30,40 +30,6 @@ GraphNode* copy(GraphNode* node)
         new->contDir[i] = node->contDir[i];
 
     return new;
-}
-
-int can_be_inserted(GraphNode* node, char *palabra, Posicion *posicion, int orientacion)
-{
-    int word_size = strlen(palabra);
-
-    if(orientacion == DIR_RIGHT || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_RIGHT_UP)
-        if((posicion->x + word_size) > node->sopa->tamanio)
-            return 0;
-    if(orientacion == DIR_LEFT || orientacion == DIR_LEFT_DOWN || orientacion == DIR_LEFT_UP)
-        if((posicion->x - word_size + 1) < 0)
-            return 0;
-    if(orientacion == DIR_DOWN || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_LEFT_DOWN)
-        if((posicion->y + word_size) > node->sopa->tamanio)
-            return 0;
-    if(orientacion == DIR_UP || orientacion == DIR_RIGHT_UP || orientacion == DIR_LEFT_UP)
-        if((posicion->y - word_size + 1) < 0)
-            return 0;
-
-    return 1;
-}
-
-void getIncrements(int *horizontal, int *vertical, int orientacion)
-{
-    *horizontal = 0, *vertical = 0;
-
-    if(orientacion == DIR_RIGHT || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_RIGHT_UP)
-        *horizontal = 1;
-    if(orientacion == DIR_LEFT || orientacion == DIR_LEFT_DOWN || orientacion == DIR_LEFT_UP)
-        *horizontal = -1;
-    if(orientacion == DIR_DOWN || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_LEFT_DOWN)
-        *vertical = 1;
-    if(orientacion == DIR_UP || orientacion == DIR_RIGHT_UP || orientacion == DIR_LEFT_UP)
-        *vertical = -1;
 }
 
 char ** copy_board(char **tablero, int tamanio)
@@ -81,16 +47,49 @@ char ** copy_board(char **tablero, int tamanio)
     return new;
 }
 
+int is_balanced(GraphNode *node, int orientacion)
+{
+    if(node->contDir[orientacion] == ((node->sopa->total_palabras - 1) / 8 + 2))
+        return 0;
+    return 1;
+}
+
+int can_be_inserted(SopaLetras *sopa, int largo_palabra, Posicion *posicion, int orientacion)
+{
+    if(orientacion == DIR_RIGHT || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_RIGHT_UP)
+        if((posicion->x + largo_palabra) > sopa->tamanio)
+            return 0;
+    if(orientacion == DIR_LEFT || orientacion == DIR_LEFT_DOWN || orientacion == DIR_LEFT_UP)
+        if((posicion->x - largo_palabra + 1) < 0)
+            return 0;
+    if(orientacion == DIR_DOWN || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_LEFT_DOWN)
+        if((posicion->y + largo_palabra) > sopa->tamanio)
+            return 0;
+    if(orientacion == DIR_UP || orientacion == DIR_RIGHT_UP || orientacion == DIR_LEFT_UP)
+        if((posicion->y - largo_palabra + 1) < 0)
+            return 0;
+
+    return 1;
+}
+
+void get_increments(int *horizontal, int *vertical, int orientacion)
+{
+    *horizontal = 0, *vertical = 0;
+
+    if(orientacion == DIR_RIGHT || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_RIGHT_UP)
+        *horizontal = 1;
+    if(orientacion == DIR_LEFT || orientacion == DIR_LEFT_DOWN || orientacion == DIR_LEFT_UP)
+        *horizontal = -1;
+    if(orientacion == DIR_DOWN || orientacion == DIR_RIGHT_DOWN || orientacion == DIR_LEFT_DOWN)
+        *vertical = 1;
+    if(orientacion == DIR_UP || orientacion == DIR_RIGHT_UP || orientacion == DIR_LEFT_UP)
+        *vertical = -1;
+}
+
 char ** fill_board(GraphNode *node, char *palabra, Posicion *posicion, int orientacion)
 {
-    if(!can_be_inserted(node, palabra, posicion, orientacion))
-        return NULL;
-
-    if(node->contDir[orientacion] == ((node->sopa->total_palabras - 1) / 8 + 2))
-        return NULL;
-
     int n, m;
-    getIncrements(&n, &m, orientacion);
+    get_increments(&n, &m, orientacion);
     char **aux = copy_board(node->sopa->tablero, node->sopa->tamanio);
 
     for(int i = 0, j = 0, k = 0; palabra[k] != '\0'; i += n, j += m, k++)
@@ -111,7 +110,7 @@ char ** fill_board(GraphNode *node, char *palabra, Posicion *posicion, int orien
     return aux;
 }
 
-Palabra *createWord(char *palabra, int largo, Posicion *posicion, int orientacion)
+Palabra *create_word(char *palabra, int largo, Posicion *posicion, int orientacion)
 {
     Palabra *solucion = (Palabra *) malloc(sizeof(Palabra));
     solucion->palabra = palabra;
@@ -122,7 +121,7 @@ Palabra *createWord(char *palabra, int largo, Posicion *posicion, int orientacio
     return solucion;
 }
 
-List* get_adj_nodes(GraphNode* node, List *listaPalabras, List *listaPosiciones)
+List* get_adj_nodes(GraphNode *node, List *listaPalabras, List *listaPosiciones)
 {
     List *adj_nodes = createList();
 
@@ -148,21 +147,23 @@ List* get_adj_nodes(GraphNode* node, List *listaPalabras, List *listaPosiciones)
     }
 
     if(palabra == NULL) return adj_nodes;
-
     int largo = strlen(palabra);
 
-    for(int k = 1; k <= 8; k++)
+    for(int orientacion = 1; orientacion <= 8; orientacion++)
     {
-        char **tablero = fill_board(node, palabra, posicion, k);
+        if(!is_balanced(node, orientacion)) continue;
+        if(!can_be_inserted(node->sopa, largo, posicion, orientacion)) continue;
+
+        char **tablero = fill_board(node, palabra, posicion, orientacion);
     
         if(tablero)
         {
-            GraphNode *new = copy(node);
+            GraphNode *new = copy_node(node);
 
-            Palabra *solucion = createWord(palabra, largo, posicion, k);
+            Palabra *solucion = create_word(palabra, largo, posicion, orientacion);
             pushBack(new->sopa->palabras, solucion);
             new->sopa->tablero = tablero;
-            new->contDir[k]++;
+            new->contDir[orientacion]++;
 
             pushBack(adj_nodes, new);
         }
@@ -171,14 +172,14 @@ List* get_adj_nodes(GraphNode* node, List *listaPalabras, List *listaPosiciones)
     return adj_nodes;
 }
 
-int is_final(GraphNode* node)
+int is_final(GraphNode *node)
 {
     if(getSize(node->sopa->palabras) == node->sopa->total_palabras)
         return 1;
     return 0;
 }
 
-GraphNode* DFS(GraphNode* initial, List *palabras, List *posiciones)
+GraphNode* DFS(GraphNode *initial, List *palabras, List *posiciones)
 {
     Stack *stack = createStack();
     push(stack, initial);
