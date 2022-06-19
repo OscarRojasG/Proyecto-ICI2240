@@ -12,3 +12,5 @@ instrumentos
 universo
 nombres
 profesiones
+razas de perro
+lenguajesdeprogra
