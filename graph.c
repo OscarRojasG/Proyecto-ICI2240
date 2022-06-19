@@ -14,8 +14,6 @@ GraphNode* createGraphNode(SopaLetras *sopa, List *palabras, List *posiciones)
 {
     GraphNode *node = (GraphNode *) calloc(1, sizeof(GraphNode));
     node->sopa = sopa;
-    node->palabrasRestantes = palabras;
-    node->posicionesRestantes = posiciones;
     return node;
 }
 
@@ -27,14 +25,6 @@ GraphNode* copy(GraphNode* node)
     new->sopa->palabras = copyList(node->sopa->palabras);
     new->sopa->total_palabras = node->sopa->total_palabras;
     new->sopa->tamanio = node->sopa->tamanio;
-
-    new->sopa->tablero = inicializarTablero(node->sopa->tamanio);
-    for(int i = 0; i < node->sopa->tamanio; i++)
-        for(int j = 0; j < node->sopa->tamanio; j++)
-            new->sopa->tablero[i][j] = node->sopa->tablero[i][j];
-
-    new->palabrasRestantes = copyList(node->palabrasRestantes);
-    new->posicionesRestantes = copyList(node->posicionesRestantes);
 
     for(int i = 0; i < 9; i++)
         new->contDir[i] = node->contDir[i];
@@ -132,11 +122,33 @@ Palabra *createWord(char *palabra, int largo, Posicion *posicion, int orientacio
     return solucion;
 }
 
-List* get_adj_nodes(GraphNode* node)
+List* get_adj_nodes(GraphNode* node, List *listaPalabras, List *listaPosiciones)
 {
     List *adj_nodes = createList();
-    char *palabra = popFront(node->palabrasRestantes);
-    Posicion *posicion = popFront(node->posicionesRestantes);
+
+    Palabra *tipoPalabra = lastList(node->sopa->palabras); // Última palabra insertada
+    char *ultima_palabra;
+
+    char *palabra = firstList(listaPalabras);
+    Posicion *posicion = firstList(listaPosiciones);
+
+    if(tipoPalabra)
+    {
+        int flag = 1;
+        ultima_palabra = tipoPalabra->palabra;
+
+        while(palabra && flag)
+        {
+            if(palabra == ultima_palabra) 
+                flag = 0;
+            
+            palabra = nextList(listaPalabras);
+            posicion = nextList(listaPosiciones);
+        }
+    }
+
+    if(palabra == NULL) return adj_nodes;
+
     int largo = strlen(palabra);
 
     for(int k = 1; k <= 8; k++)
@@ -161,12 +173,12 @@ List* get_adj_nodes(GraphNode* node)
 
 int is_final(GraphNode* node)
 {
-    if(firstList(node->palabrasRestantes))
-        return 0;
-    return 1;
+    if(getSize(node->sopa->palabras) == node->sopa->total_palabras)
+        return 1;
+    return 0;
 }
 
-GraphNode* DFS(GraphNode* initial)
+GraphNode* DFS(GraphNode* initial, List *palabras, List *posiciones)
 {
     Stack *stack = createStack();
     push(stack, initial);
@@ -175,11 +187,11 @@ GraphNode* DFS(GraphNode* initial)
     {
         GraphNode *node = top(stack);
         pop(stack);
-
+    
         if(is_final(node)) 
             return node;
 
-        List *adj_nodes = get_adj_nodes(node);
+        List *adj_nodes = get_adj_nodes(node, palabras, posiciones);
 
         GraphNode *aux = firstList(adj_nodes);
         

@@ -10,8 +10,6 @@
 typedef struct {
     SopaLetras *sopa;
     int contDir[9];
-    List *palabrasRestantes;
-    List *posicionesRestantes;
 } GraphNode;
 
 
@@ -27,13 +25,13 @@ Palabra *createWord(char *palabra, int largo, Posicion *posicion, int orientacio
 
 int can_be_inserted(GraphNode* node, char *palabra, Posicion *posicion, int orientacion);
 
-List* get_adj_nodes(GraphNode* node);
+List* get_adj_nodes(GraphNode* node, List *listaPalabras, List *listaPosiciones);
 
 void getIncrements(int *horizontal, int *vertical, int orientacion);
 
 int is_final(GraphNode* node);
 
-GraphNode* DFS(GraphNode* initial);
+GraphNode* DFS(GraphNode* initial, List *palabras, List *posiciones);
 
 
 #endif

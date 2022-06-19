@@ -59,7 +59,7 @@ int insertarPalabras(SopaLetras *sopa, List *palabras)
     {
         List *posiciones = obtenerPosiciones(sopa);
         inicial = createGraphNode(sopa, palabras, posiciones);
-        final = DFS(inicial);
+        final = DFS(inicial, palabras, posiciones);
 
         if(final) 
         {

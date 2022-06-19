@@ -179,12 +179,12 @@ void crearSopaTematica()
 
     SopaLetras *sopa = crearSopaLetras(palabrasSopa, tamanioTablero);
 
-    /*if(sopa == NULL)
+    if(sopa == NULL)
         printf("Ocurrió un error al generar la sopa de letras. Inténtalo de nuevo.\n");
     else
-        mostrarSoluciones(sopa);*/
+        mostrarSoluciones(sopa);
 
-    mostrarSubmenuCrear(sopa);
+    //mostrarSubmenuCrear(sopa);
 }
 
 
