@@ -31,7 +31,7 @@ SopaLetras * crearSopaLetras(List *listaPalabras, int tamanio);
 
 char ** inicializarTablero(int tamanio);
 
-List * obtenerPosiciones(SopaLetras *sopa);
+List * obtenerPosiciones(SopaLetras *sopa, List *listaPalabras);
 
 int insertarPalabras(SopaLetras *sopa, List *listaPalabras);
 

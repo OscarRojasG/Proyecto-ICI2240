@@ -29,24 +29,41 @@ char ** inicializarTablero(int tamanio)
     return tablero;
 }
 
-List * obtenerPosiciones(SopaLetras *sopa)
+List * obtenerPosiciones(SopaLetras *sopa, List *listaPalabras)
 {
-    int cont = 0;
     List *listaPosiciones = createList();
+    char *palabra = firstList(listaPalabras);
     char **tmp = inicializarTablero(sopa->tamanio);
 
-    while(cont < sopa->total_palabras)
+    while(palabra)
     {
         Posicion *posicion = (Posicion *) malloc(sizeof(Posicion));
-        posicion->x = rand() % sopa->tamanio;
-        posicion->y = rand() % sopa->tamanio;
+        int largo = strlen(palabra);
+        int eje = rand() % 2;
+        int intervalo = rand() % 2;
+        int aux = rand() % (sopa->tamanio - largo + 1);
+
+        if(intervalo == 1)
+            aux += sopa->tamanio - aux - 1;
+
+        if(eje == 0)
+        {
+            posicion->x = aux;
+            posicion->y = rand() % sopa->tamanio;
+        }
+        else
+        {
+            posicion->y = aux;
+            posicion->x = rand() % sopa->tamanio;
+        }
 
         if(tmp[posicion->x][posicion->y] == 'x')
             continue;
 
         tmp[posicion->x][posicion->y] = 'x';
         pushBack(listaPosiciones, posicion);
-        cont++;
+
+        palabra = nextList(listaPalabras);
     }
 
     return listaPosiciones;
@@ -55,9 +72,9 @@ List * obtenerPosiciones(SopaLetras *sopa)
 int insertarPalabras(SopaLetras *sopa, List *palabras)
 {
     GraphNode *inicial, *final;
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i < 1000; i++)
     {
-        List *posiciones = obtenerPosiciones(sopa);
+        List *posiciones = obtenerPosiciones(sopa, palabras);
         inicial = create_graph_node(sopa);
         final = DFS(inicial, palabras, posiciones);
 
