@@ -143,7 +143,8 @@ void mostrarPalabras(SopaLetras* sopa)
     while (palabra)
     {
         printf("%s\n", palabra->palabra);
-
         palabra = nextList(sopa->palabras);
     }
+    
+    printf("\n");
 }

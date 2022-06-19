@@ -56,7 +56,6 @@ int main()
                 exit(EXIT_SUCCESS);
                 break;
         }
-        printf("\n");
     }
 
     return 0;
@@ -182,12 +181,8 @@ void crearSopaTematica()
     if(sopa == NULL)
         printf("Ocurrió un error al generar la sopa de letras. Inténtalo de nuevo.\n");
     else
-        mostrarSoluciones(sopa);
-
-    //mostrarSubmenuCrear(sopa);
+        mostrarSubmenuCrear(sopa);
 }
-
-
 
 void crearSopaPersonalizada()
 {
@@ -217,38 +212,41 @@ void eliminarSopa()
 void mostrarSubmenuCrear(SopaLetras* sopa)
 {
     int opcion = 0;
+    printf("\n");
     
     while(opcion != 4)
     {
+        if(opcion != 2) mostrarTablero(sopa);
+        printf("\n");
+
         printf("1.- Ver palabras ocultas\n");
         printf("2.- Mostrar soluciones\n");
         printf("3.- Exportar\n");
         printf("4.- Salir\n\n");
 
         fflush(stdin);
+        printf("Ingrese una opción: ");
         scanf("%d", &opcion);
+        printf("\n");
 
         switch (opcion)
         {
             case 1:
                 mostrarPalabras(sopa);
-            break;
+                break;
 
             case 2:
                 mostrarSoluciones(sopa);
-            break;
+                break;
 
             case 3:
                 exportarSopa(sopa);
-            break;
-    
-            default:
-            break;
+                break;
         }
     }
 }
 
-void mostrarSubmenuCarga(SopaLetras* sopa)
+void mostrarSubmenuCargar(SopaLetras* sopa)
 {
    int opcion = 0;
 
