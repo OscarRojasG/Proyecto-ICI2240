@@ -1,0 +1,14 @@
+animales
+paises
+colores
+capitales
+ciudades
+flores
+inventos
+deportes
+frutas
+insectos
+instrumentos
+universo
+nombres
+profesiones

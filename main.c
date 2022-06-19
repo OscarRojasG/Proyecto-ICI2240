@@ -16,6 +16,8 @@ void mostrarSubmenuCargar(SopaLetras* sopa);
 
 
 // Funciones auxiliares
+void llenarMapaTemas();
+void mostrarTemas();
 List * obtenerPalabrasTema(char *tema);
 FILE * abrirArchivoTema(char *tema);
 List * leerPalabrasArchivo(FILE *archivo);
@@ -28,6 +30,7 @@ HashMap * mapaTemas;
 int main()
 {
     mapaTemas = createMap(10);
+    llenarMapaTemas();
 
     int opcion = 0;
     while(opcion != 5)
@@ -71,6 +74,41 @@ void mostrarMenu()
     printf("\n");
 }
 
+void llenarMapaTemas()
+{
+    FILE *archivo = fopen("temas.txt", "r");
+    if(!archivo)
+    {
+        printf("Error: Archivo temas.txt no encontrado.\n");
+        printf("Saliendo de la aplicación...");
+        exit(EXIT_FAILURE);
+    }
+
+    char tema[20];
+    while(fscanf(archivo, "%[^\n]", tema) != EOF)
+    {
+        char *dynchar = strdup(tema);
+        insertMap(mapaTemas, dynchar, NULL);
+        fgetc(archivo);
+    }
+}
+
+void mostrarTemas()
+{
+    Pair *pair = firstMap(mapaTemas);
+    char *tema = NULL;
+    int num = 1;
+
+    while(pair)
+    {
+        tema = pair->key;
+        printf("%d.- %s\n", num, tema);
+        pair = nextMap(mapaTemas);
+        num++;
+    }
+    printf("\n");
+}
+
 List * leerPalabrasArchivo(FILE *archivo)
 {
     List *list = createList();
@@ -98,17 +136,23 @@ FILE * abrirArchivoTema(char *tema)
 List * obtenerPalabrasTema(char *tema)
 {
     Pair *pair = searchMap(mapaTemas, tema);
-    if(pair) return (List *) pair->value;
+    if(!pair)
+    {
+        printf("Error: El tema ingresado no existe.\n\n");
+        return NULL;
+    }
+
+    if(pair->value) return (List *) pair->value;
 
     FILE *archivo = abrirArchivoTema(tema);
     if(!archivo)
     {
-        printf("Error: El tema ingresado no existe.\n");
+        printf("Error: Ocurrió un error al cargar la lista de palabras.\n\n");
         return NULL;
     }
 
     List *palabrasTema = leerPalabrasArchivo(archivo);
-    insertMap(mapaTemas, tema, palabrasTema);
+    pair->value = palabrasTema;
     fclose(archivo);
     
     return palabrasTema;
@@ -165,6 +209,8 @@ void crearSopaTematica()
     char tema[20];
     int cantidadPalabras = 18;
     int tamanioTablero = 18;
+
+    mostrarTemas();
 
     printf("Ingrese un tema: ");
     fflush(stdin);
