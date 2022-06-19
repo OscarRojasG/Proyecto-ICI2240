@@ -21,6 +21,7 @@ void mostrarTemas();
 void mostrarDificultades();
 void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioTablero);
 List * obtenerPalabrasTema(char *tema);
+List * obtenerPalabrasPersonalizada(int cantPalabras, int tamanio);
 FILE * abrirArchivoTema(char *tema);
 List * leerPalabrasArchivo(FILE *archivo);
 List * obtenerPalabrasValidas(List *list, int largoMax);
@@ -133,6 +134,31 @@ FILE * abrirArchivoTema(char *tema)
 
     FILE *archivo = fopen(directorio, "r");
     return archivo;
+}
+
+List * obtenerPalabrasPersonalizada(int cantPalabras, int largoMax)
+{
+    List* palabras = createList();
+    char palabra [50];
+    int cont = 0;
+
+    while (cont < cantPalabras)
+    {
+        while(1)
+        {
+            printf("Ingrese palabras: ");
+            fflush(stdin);
+            scanf("%[^\n]", palabra);
+
+            if((int)strlen(palabra) <= largoMax) break;
+        }
+
+        char *dynchar = strdup(palabra);
+        pushBack(palabras, dynchar);
+        cont++;
+    }
+
+    return palabras;
 }
 
 List * obtenerPalabrasTema(char *tema)
@@ -273,8 +299,38 @@ void crearSopaTematica()
 
 void crearSopaPersonalizada()
 {
+    char nombre[20];
+    int cantidadPalabras;
+    int tamanioTablero;
 
+    printf("\nIngrese nombre de sopa: ");
+    fflush(stdin);
+    scanf("%[^\n]", nombre);
+
+    printf("\nCantidad de palabras a ingresar: ");
+    fflush(stdin);
+    scanf("%d", &cantidadPalabras);
+
+    while(1)
+    {
+        printf("\nTamaño de tablero: ");
+        fflush(stdin);
+        scanf("%d", &tamanioTablero);
+
+        if(tamanioTablero <= 25)break;
+    }
+
+    List *palabrasSopa = obtenerPalabrasPersonalizada(cantidadPalabras, tamanioTablero);
+    if(!palabrasSopa) return;
+
+    SopaLetras *sopa = crearSopaLetras(palabrasSopa, tamanioTablero);
+
+    if(sopa == NULL)
+        printf("Ocurrió un error al generar la sopa de letras. Inténtalo de nuevo.\n\n");
+    else
+        mostrarSubmenuCrear(sopa);
 }
+
 
 void mostrarSopas()
 {
