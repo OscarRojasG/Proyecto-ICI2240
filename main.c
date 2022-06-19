@@ -18,6 +18,8 @@ void mostrarSubmenuCargar(SopaLetras* sopa);
 // Funciones auxiliares
 void llenarMapaTemas();
 void mostrarTemas();
+void mostrarDificultades();
+void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioTablero);
 List * obtenerPalabrasTema(char *tema);
 FILE * abrirArchivoTema(char *tema);
 List * leerPalabrasArchivo(FILE *archivo);
@@ -204,11 +206,41 @@ List * obtenerPalabrasAleatorias(List * list, int numPalabras)
     return new;
 }
 
+void mostrarDificultades()
+{
+    printf("\n");
+    printf("%-15s %-25s %s\n", "Dificultad", "Cantidad de palabras", "Dimensiones del tablero");
+    printf("%-15s %-25s %s\n", "1. Facil", "10", "12 x 12");
+    printf("%-15s %-25s %s\n", "2. Media", "12", "15 x 15");
+    printf("%-15s %-25s %s\n", "3. Dificil", "15", "18 x 18");
+    printf("\n");
+}
+
+void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioTablero)
+{
+    switch(dificultad)
+    {
+        case 1:
+            *cantidadPalabras = 10;
+            *tamanioTablero = 12;
+            break;
+        case 2:
+            *cantidadPalabras = 12;
+            *tamanioTablero = 15;
+            break;
+        case 3:
+            *cantidadPalabras = 15;
+            *tamanioTablero = 18;
+            break;
+    }
+}
+
 void crearSopaTematica()
 {
     char tema[20];
-    int cantidadPalabras = 18;
-    int tamanioTablero = 18;
+    int dificultad;
+    int cantidadPalabras = -1;
+    int tamanioTablero = -1;
 
     mostrarTemas();
 
@@ -219,13 +251,22 @@ void crearSopaTematica()
     List *palabrasTema = obtenerPalabrasTema(tema);
     if(!palabrasTema) return;
 
+    while(cantidadPalabras == -1)
+    {
+        mostrarDificultades();
+        printf("Ingrese el número de la dificultad: ");
+        fflush(stdin);
+        scanf("%d", &dificultad);
+        obtenerDatosDificultad(dificultad, &cantidadPalabras, &tamanioTablero);
+    }
+
     List *palabrasValidas = obtenerPalabrasValidas(palabrasTema, tamanioTablero);
     List *palabrasSopa = obtenerPalabrasAleatorias(palabrasValidas, cantidadPalabras);
 
     SopaLetras *sopa = crearSopaLetras(palabrasSopa, tamanioTablero);
 
     if(sopa == NULL)
-        printf("Ocurrió un error al generar la sopa de letras. Inténtalo de nuevo.\n");
+        printf("Ocurrió un error al generar la sopa de letras. Inténtalo de nuevo.\n\n");
     else
         mostrarSubmenuCrear(sopa);
 }
