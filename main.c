@@ -19,6 +19,8 @@ void mostrarSubmenuCargar(SopaLetras* sopa);
 // Funciones auxiliares
 char *get_field(char *linea, int indice);
 void llenarMapaTemas();
+void llenarMapaSopas();
+void cargarDatosSopa(SopaLetras *sopa, FILE *archivo);
 void mostrarTemas();
 void mostrarDificultades();
 void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioTablero);
@@ -26,17 +28,21 @@ void inicializarSopa(SopaLetras *sopa, FILE *archivoSopa);
 List * obtenerPalabrasTema(char *tema);
 List * obtenerPalabrasPersonalizada(int cantPalabras, int tamanio);
 FILE * abrirArchivoTema(char *tema);
+FILE * abrirArchivoSopa(char *nombre);
 List * leerPalabrasArchivo(FILE *archivo);
 List * obtenerPalabrasValidas(List *list, int largoMax);
 List * obtenerPalabrasAleatorias(List *list, int numPalabras);
 
 // Variables globales
 HashMap * mapaTemas;
+HashMap * mapaSopas;
 
 int main()
 {
     mapaTemas = createMap(10);
+    mapaSopas = createMap(10);
     llenarMapaTemas();
+    llenarMapaSopas();
 
     int opcion = 0;
     while(opcion != 5)
@@ -336,10 +342,61 @@ void crearSopaPersonalizada()
         mostrarSubmenuCrear(sopa);
 }
 
+FILE * abrirArchivoSopa(char *nombre)
+{
+    char directorio[30];
+    strcpy(directorio, "SopasPersonalizadas/");
+    strcat(directorio, nombre);
+    strcat(directorio, ".txt");
+
+    FILE *archivo = fopen(directorio, "r");
+    return archivo;
+}
+
+void cargarDatosSopa(SopaLetras *sopa, FILE *archivo)
+{
+    sopa->palabras = NULL;
+    sopa->tablero = NULL;
+    sopa->tamanio = 1;
+    sopa->total_palabras = 1;
+}
+
+void llenarMapaSopas()
+{
+    FILE *archivoNombres = fopen("sopas.txt", "r");
+    if(!archivoNombres) return;
+
+    char nombreSopa[30];
+    while(fscanf(archivoNombres, "%[^\n]", nombreSopa) != EOF)
+    {
+        FILE *archivoSopa = abrirArchivoSopa(nombreSopa);
+        if(!archivoSopa) continue;
+
+        SopaLetras *sopa = (SopaLetras *) malloc(sizeof(SopaLetras));
+        cargarDatosSopa(sopa, archivoSopa);
+
+        insertMap(mapaSopas, nombreSopa, sopa);
+    }
+}
 
 void mostrarSopas()
 {
+    Pair *pair = firstMap(mapaSopas);
+    if(!pair) 
+    {
+        printf("No hay sopas guardadas.\n\n");
+        return;
+    }
 
+    printf("%-15s %-25s %s\n", "Nombre", "Cantidad de palabras", "Dimensiones del tablero");
+
+    while(pair)
+    {
+        SopaLetras *sopa = pair->value;
+        printf("%-15s %-25d %d\n", pair->key, sopa->total_palabras, sopa->tamanio);
+        pair = nextMap(mapaSopas);
+    }
+    printf("\n");
 }
 
 char *get_field(char *linea, int indice)
@@ -441,7 +498,7 @@ void cargarSopa()
 
     popBack(palabrasOcultas);
     
-    copiarTablero(auxSopa, archivoSopa);
+    // copiarTablero(auxSopa, archivoSopa);
     
 }
 
