@@ -355,10 +355,39 @@ FILE * abrirArchivoSopa(char *nombre)
 
 void cargarDatosSopa(SopaLetras *sopa, FILE *archivo)
 {
-    sopa->palabras = NULL;
-    sopa->tablero = NULL;
-    sopa->tamanio = 1;
-    sopa->total_palabras = 1;
+    char linea[101];
+
+    fgets(linea, 100 * sizeof(char), archivo);
+    fgets(linea, 100 * sizeof(char), archivo);
+    sopa->tamanio = atoi(linea + 8);
+
+    fgets(linea, 100 * sizeof(char), archivo);
+    sopa->total_palabras = atoi(linea + 22);
+
+    fgets(linea, 100 * sizeof(char), archivo);
+    fgets(linea, 100 * sizeof(char), archivo);
+
+    sopa->palabras = createList();
+
+    for(int i = 0; i < sopa->total_palabras; i++)
+    {
+        fgets(linea, 100 * sizeof(char), archivo);
+
+        Palabra *palabra = (Palabra *) malloc(sizeof(Palabra));
+        palabra->posicion = (Posicion *) malloc(sizeof(Posicion));
+
+        palabra->palabra = get_field(linea, 0);
+        palabra->posicion->x = atoi(get_field(linea, 1));
+        palabra->posicion->y = atoi(get_field(linea, 2));
+        palabra->orientacion = atoi(get_field(linea, 3));
+
+        pushBack(sopa->palabras, palabra);
+    }
+
+    fgets(linea, 100 * sizeof(char), archivo);
+    fgets(linea, 100 * sizeof(char), archivo);
+
+    // Función para leer tablero 
 }
 
 void llenarMapaSopas()
@@ -388,7 +417,7 @@ void mostrarSopas()
         return;
     }
 
-    printf("%-15s %-25s %s\n", "Nombre", "Cantidad de palabras", "Dimensiones del tablero");
+    printf("%-15s %-25s %s\n", "Nombre", "Cantidad de palabras", "Tamaño del tablero");
 
     while(pair)
     {
@@ -441,64 +470,8 @@ char *get_field(char *linea, int indice)
     return NULL;
 }
 
-
 void cargarSopa()
 {
-    char directorio[30];
-    char nombreSopa[30];
-
-    printf("Ingrese el nombre: ");
-    fflush(stdin); scanf("%[^\n]", nombreSopa);
-
-    strcpy(directorio, "SopasPersonalizadas/");
-    strcat(directorio, nombreSopa);
-    strcat(directorio, ".txt");
-
-    FILE* archivoSopa;
-    archivoSopa = fopen(directorio, "r");
-    if(!archivoSopa) 
-    {
-        printf("ERROR: archivo %s no encontrado\n", nombreSopa);
-        return;
-    }
-
-    SopaLetras *auxSopa = (SopaLetras *) malloc(sizeof(SopaLetras));
-
-    char linea [101];
-
-    fgets(linea, 100 * sizeof(char), archivoSopa);
-    printf("\nNombre sopa: %s\n", linea + 13);
-
-    fgets(linea, 100 * sizeof(char), archivoSopa);
-    auxSopa->tamanio = atoi(linea + 8);
-    fgets(linea, 100 * sizeof(char), archivoSopa);
-    auxSopa->total_palabras = atoi(linea + 22);
-
-    List *palabrasOcultas = createList();
-
-    while (fgets(linea, 100 * sizeof(char), archivoSopa))
-        if(strstr(linea, "Lista de palabras:")) break;
-
-    while (fgets (linea, 100 * sizeof(char), archivoSopa)) 
-    {
-        if(strstr(linea, "Tablero:")) break;
-
-        char *stringPalabra = get_field(linea, 0);
-        int x = atoi(get_field(linea, 1));
-        int y = atoi(get_field(linea, 2));  // Pasamos el string a entero
-        int orientacion = atoi(get_field(linea, 3)); // Pasamos el string a entero
-
-        Posicion *posicion = (Posicion *) malloc(sizeof(Posicion));
-        posicion->x = x;
-        posicion->y = y;
-
-        Palabra *palabra = create_word(stringPalabra, ((int)strlen(stringPalabra)), posicion, orientacion);
-        pushBack(palabrasOcultas, palabra);
-    }
-
-    popBack(palabrasOcultas);
-    
-    // copiarTablero(auxSopa, archivoSopa);
     
 }
 
