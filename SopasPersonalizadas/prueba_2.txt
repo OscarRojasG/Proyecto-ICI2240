@@ -1,0 +1,22 @@
+Nombre/tema: prueba_2
+Tamaño: 10
+Cantidad de palabras: 5
+
+Lista de palabras:
+prueba,0,9,6
+dos,8,6,7
+del,1,5,6
+formato,1,9,1
+exportar,6,0,3
+
+Tablero:
+v s c x g g b w k p 
+f n q d u d x w r f 
+f n f o e z v u s o 
+r t k l j p e r e r 
+p g g x r b p n r m 
+v y s t a m w c y a 
+e x p o r t a r s t 
+s y y c q p e o v o 
+i k e f f m d z n i 
+m k k a s v w s r e 

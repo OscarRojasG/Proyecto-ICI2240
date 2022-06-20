@@ -3,11 +3,11 @@ Tamaño: 10
 Cantidad de palabras: 5
 
 Lista de palabras:
--prueba
--del
--formato
--funcion
--exportar
+prueba,0,9,4
+del,8,6,7
+formato,1,5,1
+funcion,1,0,1
+exportar,6,0,3
 
 Tablero:
 v s c x a b e u r p 
@@ -20,17 +20,3 @@ e x p o r t a r l o
 c y s y y o c e q n 
 p e v i k e d f f m 
 z n i m k k a s v w 
-
-Posiciones:
-0,9
-8,6
-1,5
-1,9
-6,0
-
-Orientaciones:
-4
-7
-1
-1
-3

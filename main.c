@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "list.h"
 #include "soup.h"
 #include "hashmap.h"
@@ -16,10 +17,12 @@ void mostrarSubmenuCargar(SopaLetras* sopa);
 
 
 // Funciones auxiliares
+char *get_field(char *linea, int indice);
 void llenarMapaTemas();
 void mostrarTemas();
 void mostrarDificultades();
 void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioTablero);
+void inicializarSopa(SopaLetras *sopa, FILE *archivoSopa);
 List * obtenerPalabrasTema(char *tema);
 List * obtenerPalabrasPersonalizada(int cantPalabras, int tamanio);
 FILE * abrirArchivoTema(char *tema);
@@ -261,6 +264,11 @@ void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioT
     }
 }
 
+void inicializarSopa(SopaLetras *sopa, FILE *archivoSopa)
+{
+
+}
+
 void crearSopaTematica()
 {
     char tema[20];
@@ -337,9 +345,107 @@ void mostrarSopas()
 
 }
 
+char *get_field(char *linea, int indice)
+{
+    char *campo = (char *) malloc(100 * sizeof(char *)); // Guarda el string a retornar
+    int i = 0; // Recorre la linea
+    int k = 0; // Cuenta las comas
+    int n = 0; // Recorre el campo
+    bool comillas = false;
+
+    while(linea[i] != '\0')
+    {
+        if(linea[i] == '\"')
+        {
+            comillas = !comillas;
+        }
+
+        if(k == indice)
+        {
+            if(linea[i] != '\"')
+            {
+                campo[n] = linea[i];
+                n++;
+            }
+        }
+
+        i++;
+
+        if(linea[i] == ',' && !comillas)
+        {
+            k++;
+            i++;
+        }
+
+        if(k > indice || linea[i] == '\0' || linea[i] == '\n')
+        {
+            campo[n] = '\0';
+            return campo;
+        }
+    }
+
+    return NULL;
+}
+
+
 void cargarSopa()
 {
+    char directorio[30];
+    char nombreSopa[30];
 
+    printf("Ingrese el nombre: ");
+    fflush(stdin); scanf("%[^\n]", nombreSopa);
+
+    strcpy(directorio, "SopasPersonalizadas/");
+    strcat(directorio, nombreSopa);
+    strcat(directorio, ".txt");
+
+    FILE* archivoSopa;
+    archivoSopa = fopen(directorio, "r");
+    if(!archivoSopa) 
+    {
+        printf("ERROR: archivo %s no encontrado\n", nombreSopa);
+        return;
+    }
+
+    SopaLetras *auxSopa = (SopaLetras *) malloc(sizeof(SopaLetras));
+
+    char linea [101];
+
+    fgets(linea, 100 * sizeof(char), archivoSopa);
+    printf("\nNombre sopa: %s\n", linea + 13);
+
+    fgets(linea, 100 * sizeof(char), archivoSopa);
+    auxSopa->tamanio = atoi(linea + 8);
+    fgets(linea, 100 * sizeof(char), archivoSopa);
+    auxSopa->total_palabras = atoi(linea + 22);
+
+    List *palabrasOcultas = createList();
+
+    while (fgets(linea, 100 * sizeof(char), archivoSopa))
+        if(strstr(linea, "Lista de palabras:")) break;
+
+    while (fgets (linea, 100 * sizeof(char), archivoSopa)) 
+    {
+        if(strstr(linea, "Tablero:")) break;
+
+        char *stringPalabra = get_field(linea, 0);
+        int x = atoi(get_field(linea, 1));
+        int y = atoi(get_field(linea, 2));  // Pasamos el string a entero
+        int orientacion = atoi(get_field(linea, 3)); // Pasamos el string a entero
+
+        Posicion *posicion = (Posicion *) malloc(sizeof(Posicion));
+        posicion->x = x;
+        posicion->y = y;
+
+        Palabra *palabra = create_word(stringPalabra, ((int)strlen(stringPalabra)), posicion, orientacion);
+        pushBack(palabrasOcultas, palabra);
+    }
+
+    popBack(palabrasOcultas);
+    
+    copiarTablero(auxSopa, archivoSopa);
+    
 }
 
 void exportarSopa(SopaLetras* sopa)
@@ -368,7 +474,7 @@ void exportarSopa(SopaLetras* sopa)
 
     while(auxPalabra)
     {
-        fprintf(archivoSopa, "-%s\n", auxPalabra->palabra);
+        fprintf(archivoSopa, "%s,%d,%d,%d\n", auxPalabra->palabra, auxPalabra->posicion->x, auxPalabra->posicion->y, auxPalabra->orientacion);
         auxPalabra = nextList(sopa->palabras);
     }
 
@@ -381,24 +487,6 @@ void exportarSopa(SopaLetras* sopa)
             fprintf(archivoSopa, "%c ", sopa->tablero[i][j]);
         }
         fprintf(archivoSopa, "\n");
-    }
-
-    fprintf(archivoSopa, "\nPosiciones:\n");
-
-    auxPalabra = firstList(sopa->palabras);
-    while(auxPalabra)
-    {
-        fprintf(archivoSopa, "%d,%d\n", auxPalabra->posicion->x, auxPalabra->posicion->y);
-        auxPalabra = nextList(sopa->palabras);
-    }
-
-    fprintf(archivoSopa, "\nOrientaciones:\n");
-
-    auxPalabra = firstList(sopa->palabras);
-    while(auxPalabra)
-    {
-        fprintf(archivoSopa, "%d\n", auxPalabra->orientacion);
-        auxPalabra = nextList(sopa->palabras);
     }
 
     fclose(archivoSopa);
