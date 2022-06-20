@@ -347,6 +347,13 @@ void exportarSopa(SopaLetras* sopa)
     printf("Ingrese el nombre: ");
     fflush(stdin); scanf("%[^\n]", nombreSopa);
 
+    FILE *archivoNombres = fopen("sopas.txt", "a");
+    fseek(archivoNombres, 0, SEEK_END);
+    if(ftell(archivoNombres) != 0)
+        fprintf(archivoNombres, "\n");
+    fprintf(archivoNombres, "%s", nombreSopa);
+    fclose(archivoNombres);
+
     strcpy(directorio, "SopasPersonalizadas/");
     strcat(directorio, nombreSopa);
     strcat(directorio, ".txt");
@@ -401,7 +408,6 @@ void exportarSopa(SopaLetras* sopa)
     fclose(archivoSopa);
 
     printf("La sopa fue guardada en %s\n\n", directorio);
-
 }
 
 void eliminarSopa()
