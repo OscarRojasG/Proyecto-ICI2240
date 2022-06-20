@@ -87,7 +87,7 @@ void llenarMapaTemas()
         exit(EXIT_FAILURE);
     }
 
-    char tema[20];
+    char tema[30];
     while(fscanf(archivo, "%[^\n]", tema) != EOF)
     {
         char *dynchar = strdup(tema);
@@ -299,7 +299,7 @@ void crearSopaTematica()
 
 void crearSopaPersonalizada()
 {
-    char nombre[20];
+    char nombre[30];
     int cantidadPalabras;
     int tamanioTablero;
 
@@ -342,8 +342,68 @@ void cargarSopa()
 
 }
 
-void exportarSopa()
+void exportarSopa(SopaLetras* sopa)
 {
+    char directorio[30];
+    char nombreSopa[30];
+
+    printf("Ingrese el nombre: ");
+    fflush(stdin); scanf("%[^\n]", nombreSopa);
+
+    strcpy(directorio, "SopasPersonalizadas/");
+    strcat(directorio, nombreSopa);
+    strcat(directorio, ".txt");
+
+    FILE* archivoSopa;
+    archivoSopa = fopen(directorio, "wt");
+
+    fprintf(archivoSopa, "Nombre/tema: %s\n", nombreSopa);
+    fprintf(archivoSopa, "Tamaño: %d\n", sopa->tamanio);
+    fprintf(archivoSopa, "Cantidad de palabras: %d\n", sopa->total_palabras);
+
+    fprintf(archivoSopa, "\nLista de palabras:\n");
+
+    Palabra *auxPalabra;
+    auxPalabra = firstList(sopa->palabras);
+
+    while(auxPalabra)
+    {
+        fprintf(archivoSopa, "-%s\n", auxPalabra->palabra);
+        auxPalabra = nextList(sopa->palabras);
+    }
+
+    fprintf(archivoSopa, "\nTablero:\n");
+
+    for (int i = 0; i < sopa->tamanio; i++)
+    {
+        for (int j = 0; j < sopa->tamanio; j++)
+        {
+            fprintf(archivoSopa, "%c ", sopa->tablero[i][j]);
+        }
+        fprintf(archivoSopa, "\n");
+    }
+
+    fprintf(archivoSopa, "\nPosiciones:\n");
+
+    auxPalabra = firstList(sopa->palabras);
+    while(auxPalabra)
+    {
+        fprintf(archivoSopa, "%d,%d\n", auxPalabra->posicion->x, auxPalabra->posicion->y);
+        auxPalabra = nextList(sopa->palabras);
+    }
+
+    fprintf(archivoSopa, "\nOrientaciones:\n");
+
+    auxPalabra = firstList(sopa->palabras);
+    while(auxPalabra)
+    {
+        fprintf(archivoSopa, "%d\n", auxPalabra->orientacion);
+        auxPalabra = nextList(sopa->palabras);
+    }
+
+    fclose(archivoSopa);
+
+    printf("La sopa fue guardada en %s\n\n", directorio);
 
 }
 

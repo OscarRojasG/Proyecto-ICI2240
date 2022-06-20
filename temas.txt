@@ -13,4 +13,4 @@ universo
 nombres
 profesiones
 razas de perro
-lenguajesdeprogra
+lenguajes de programacion
