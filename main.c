@@ -142,7 +142,7 @@ FILE * abrirArchivoTema(char *tema)
 List * obtenerPalabrasPersonalizada(int cantPalabras, int largoMax)
 {
     List* palabras = createList();
-    char palabra [50];
+    char palabra[30];
     int cont = 0;
 
     while (cont < cantPalabras)
@@ -154,6 +154,7 @@ List * obtenerPalabrasPersonalizada(int cantPalabras, int largoMax)
             scanf("%[^\n]", palabra);
 
             if((int)strlen(palabra) <= largoMax) break;
+            printf("Error: Las palabras no pueden tener más de %d letras.\n", largoMax);
         }
 
         char *dynchar = strdup(palabra);
@@ -307,25 +308,21 @@ void crearSopaTematica()
 
 void crearSopaPersonalizada()
 {
-    char nombre[30];
     int cantidadPalabras;
     int tamanioTablero;
 
-    printf("\nIngrese nombre de sopa: ");
-    fflush(stdin);
-    scanf("%[^\n]", nombre);
-
-    printf("\nCantidad de palabras a ingresar: ");
+    printf("\nIngrese la cantidad de palabras: ");
     fflush(stdin);
     scanf("%d", &cantidadPalabras);
 
     while(1)
     {
-        printf("\nTamaño de tablero: ");
+        printf("Ingrese el tamaño del tablero: ");
         fflush(stdin);
         scanf("%d", &tamanioTablero);
 
-        if(tamanioTablero <= 25)break;
+        if(tamanioTablero >= 5 && tamanioTablero <= 25) break;
+        printf("Error: El tamaño del tablero debe estar entre 5 y 25.\n");
     }
 
     List *palabrasSopa = obtenerPalabrasPersonalizada(cantidadPalabras, tamanioTablero);
@@ -456,6 +453,13 @@ void exportarSopa(SopaLetras* sopa)
     printf("Ingrese el nombre: ");
     fflush(stdin); scanf("%[^\n]", nombreSopa);
 
+    FILE *archivoNombres = fopen("sopas.txt", "a");
+    fseek(archivoNombres, 0, SEEK_END);
+    if(ftell(archivoNombres) != 0)
+        fprintf(archivoNombres, "\n");
+    fprintf(archivoNombres, "%s", nombreSopa);
+    fclose(archivoNombres);
+
     strcpy(directorio, "SopasPersonalizadas/");
     strcat(directorio, nombreSopa);
     strcat(directorio, ".txt");
@@ -492,7 +496,6 @@ void exportarSopa(SopaLetras* sopa)
     fclose(archivoSopa);
 
     printf("La sopa fue guardada en %s\n\n", directorio);
-
 }
 
 void eliminarSopa()
