@@ -503,6 +503,11 @@ void cargarSopa()
 
     pair = searchMap(mapaSopas, nombreSopa);
 
+    if(pair == NULL){
+        printf("No se encontraron sopas con el nombre ingresado.\n\n");
+        return;
+    }
+    
     auxSopa = pair->value;
 
     mostrarTablero(auxSopa);
