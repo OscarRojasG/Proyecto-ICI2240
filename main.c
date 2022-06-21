@@ -25,6 +25,7 @@ void mostrarTemas();
 void mostrarDificultades();
 void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioTablero);
 void inicializarSopa(SopaLetras *sopa, FILE *archivoSopa);
+void eliminarEspacios(char *linea);
 List * obtenerPalabrasTema(char *tema);
 List * obtenerPalabrasPersonalizada(int cantPalabras, int tamanio);
 FILE * abrirArchivoTema(char *tema);
@@ -353,6 +354,18 @@ FILE * abrirArchivoSopa(char *nombre)
     return archivo;
 }
 
+void eliminarEspacios(char *linea)
+{
+    for (int i = 0; i <= strlen(linea); i++)
+    {
+        if (linea[i] == ' ')
+        {
+            for (int j = i; j < strlen(linea); j++)
+                linea[j] = linea[j+1];
+        }
+    }
+}
+
 void cargarDatosSopa(SopaLetras *sopa, FILE *archivo)
 {
     char linea[101];
@@ -387,7 +400,14 @@ void cargarDatosSopa(SopaLetras *sopa, FILE *archivo)
     fgets(linea, 100 * sizeof(char), archivo);
     fgets(linea, 100 * sizeof(char), archivo);
 
-    // Función para leer tablero 
+    sopa->tablero = inicializarTablero(sopa->tamanio);
+
+    for (int i = 0; i < sopa->tamanio; i++)
+    {
+        fgets(linea, 100 * sizeof(char), archivo);
+        eliminarEspacios(linea);
+        strcpy(sopa->tablero[i], linea);
+    }
 }
 
 void llenarMapaSopas()
@@ -472,7 +492,21 @@ char *get_field(char *linea, int indice)
 
 void cargarSopa()
 {
-    
+    char nombreSopa [20];
+    Pair *pair;
+    SopaLetras *auxSopa;
+
+    printf("Ingrese nombre de sopa a buscar: ");
+
+    fflush(stdin);
+    scanf("%s", nombreSopa);
+
+    pair = searchMap(mapaSopas, nombreSopa);
+
+    auxSopa = pair->value;
+
+    mostrarTablero(auxSopa);
+    mostrarSubmenuCargar(auxSopa);
 }
 
 void exportarSopa(SopaLetras* sopa)
