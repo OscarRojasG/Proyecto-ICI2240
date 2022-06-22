@@ -525,7 +525,7 @@ void cargarSopa()
 
 void exportarSopa(SopaLetras* sopa)
 {
-    char directorio[30];
+    char directorio[50];
     char nombreSopa[30];
 
     printf("Ingrese el nombre: ");
