@@ -79,7 +79,7 @@ int main()
 
 void mostrarMenu()
 {
-    printf("1.- Crear sopa de letras temática\n");
+    printf("1.- Crear sopa de letras tematica\n");
     printf("2.- Crear sopa de letras personalizada\n");
     printf("3.- Mostrar sopas de letras\n");
     printf("4.- Cargar sopa de letras\n");
@@ -520,23 +520,23 @@ void exportarSopa(SopaLetras* sopa)
     char nombreSopa[30];
 
     printf("Ingrese el nombre: ");
-    fflush(stdin); scanf("%[^\n]", nombreSopa);
+    fflush(stdin); scanf("%[^\n]", sopa->nombreSopa);
 
     FILE *archivoNombres = fopen("sopas.txt", "a");
     fseek(archivoNombres, 0, SEEK_END);
     if(ftell(archivoNombres) != 0)
         fprintf(archivoNombres, "\n");
-    fprintf(archivoNombres, "%s", nombreSopa);
+    fprintf(archivoNombres, "%s", sopa->nombreSopa);
     fclose(archivoNombres);
 
     strcpy(directorio, "SopasPersonalizadas/");
-    strcat(directorio, nombreSopa);
+    strcat(directorio, sopa->nombreSopa);
     strcat(directorio, ".txt");
 
     FILE* archivoSopa;
     archivoSopa = fopen(directorio, "wt");
 
-    fprintf(archivoSopa, "Nombre/tema: %s\n", nombreSopa);
+    fprintf(archivoSopa, "Nombre/tema: %s\n", sopa->nombreSopa);
     fprintf(archivoSopa, "Tamaño: %d\n", sopa->tamanio);
     fprintf(archivoSopa, "Cantidad de palabras: %d\n", sopa->total_palabras);
 
@@ -562,14 +562,27 @@ void exportarSopa(SopaLetras* sopa)
         fprintf(archivoSopa, "\n");
     }
 
+    insertMap(mapaSopas, sopa->nombreSopa, sopa);
+
     fclose(archivoSopa);
 
     printf("La sopa fue guardada en %s\n\n", directorio);
 }
 
-void eliminarSopa()
+void eliminarSopa(SopaLetras* sopa)
 {
+    char directorioSopa[30];
 
+    strcpy(directorioSopa, "SopasPersonalizadas/");
+    strcat(directorioSopa, sopa->nombreSopa);
+    strcat(directorioSopa, ".txt");
+
+    if(remove(directorioSopa) != 0){
+        printf("Error al borrar la sopa de letras.\n\n");
+    }else{
+        printf("La sopa de letras se elimino correctamente.\n\n");
+    }
+    eraseMap(mapaSopas, sopa->nombreSopa);
 }
 
 void mostrarSubmenuCrear(SopaLetras* sopa)
@@ -604,7 +617,8 @@ void mostrarSubmenuCrear(SopaLetras* sopa)
 
             case 3:
                 exportarSopa(sopa);
-                break;
+                return;    
+            break;
         }
     }
 }
@@ -621,6 +635,7 @@ void mostrarSubmenuCargar(SopaLetras* sopa)
         printf("4.- Salir\n\n");
 
         fflush(stdin);
+        printf("Ingrese una opción: ");
         scanf("%d", &opcion);
 
         switch (opcion)
@@ -635,6 +650,7 @@ void mostrarSubmenuCargar(SopaLetras* sopa)
 
             case 3:
                 eliminarSopa(sopa);
+                return;
             break;
     
             default:
