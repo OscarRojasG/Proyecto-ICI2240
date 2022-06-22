@@ -22,7 +22,6 @@ typedef struct {
     int tamanio;
     int total_palabras;
     List *palabras;
-    char nombreSopa[30];
 } SopaLetras;
 
 #include "graph.h"

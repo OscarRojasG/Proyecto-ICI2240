@@ -12,8 +12,9 @@ void crearSopaPersonalizada();
 void mostrarSopas();
 void cargarSopa();
 void exportarSopa();
+void eliminarSopa(char *nombreSopa);
 void mostrarSubmenuCrear(SopaLetras* sopa);
-void mostrarSubmenuCargar(SopaLetras* sopa);
+void mostrarSubmenuCargar(SopaLetras* sopa, char *nombre);
 
 
 // Funciones auxiliares
@@ -428,11 +429,13 @@ void llenarMapaSopas()
 
         SopaLetras *sopa = (SopaLetras *) malloc(sizeof(SopaLetras));
         cargarDatosSopa(sopa, archivoSopa);
-        strcpy(sopa->nombreSopa, nombreSopa);
         insertMap(mapaSopas, nombreSopa, sopa);
 
         fgetc(archivoNombres);
+        fclose(archivoSopa);
     }
+
+    fclose(archivoNombres);
 }
 
 void mostrarSopas()
@@ -517,7 +520,7 @@ void cargarSopa()
     
     auxSopa = pair->value;
 
-    mostrarSubmenuCargar(auxSopa);
+    mostrarSubmenuCargar(auxSopa, nombreSopa);
 }
 
 void exportarSopa(SopaLetras* sopa)
@@ -526,23 +529,24 @@ void exportarSopa(SopaLetras* sopa)
     char nombreSopa[30];
 
     printf("Ingrese el nombre: ");
-    fflush(stdin); scanf("%[^\n]", sopa->nombreSopa);
+    fflush(stdin); 
+    scanf("%[^\n]", nombreSopa);
 
     FILE *archivoNombres = fopen("sopas.txt", "a");
     fseek(archivoNombres, 0, SEEK_END);
     if(ftell(archivoNombres) != 0)
         fprintf(archivoNombres, "\n");
-    fprintf(archivoNombres, "%s", sopa->nombreSopa);
+    fprintf(archivoNombres, "%s", nombreSopa);
     fclose(archivoNombres);
 
     strcpy(directorio, "SopasPersonalizadas/");
-    strcat(directorio, sopa->nombreSopa);
+    strcat(directorio, nombreSopa);
     strcat(directorio, ".txt");
 
     FILE* archivoSopa;
     archivoSopa = fopen(directorio, "wt");
 
-    fprintf(archivoSopa, "Nombre/tema: %s\n", sopa->nombreSopa);
+    fprintf(archivoSopa, "Nombre/tema: %s\n", nombreSopa);
     fprintf(archivoSopa, "Tamaño: %d\n", sopa->tamanio);
     fprintf(archivoSopa, "Cantidad de palabras: %d\n", sopa->total_palabras);
 
@@ -568,26 +572,27 @@ void exportarSopa(SopaLetras* sopa)
         fprintf(archivoSopa, "\n");
     }
 
-    insertMap(mapaSopas, sopa->nombreSopa, sopa);
+    insertMap(mapaSopas, nombreSopa, sopa);
 
     fclose(archivoSopa);
 
     printf("La sopa fue guardada en %s\n\n", directorio);
 }
 
-void eliminarSopa(SopaLetras* sopa)
+void eliminarSopa(char *nombreSopa)
 {
-    char directorioSopa[30];
+    char directorioSopa[50];
 
     strcpy(directorioSopa, "SopasPersonalizadas/");
-    strcat(directorioSopa, sopa->nombreSopa);
+    strcat(directorioSopa, nombreSopa);
     strcat(directorioSopa, ".txt");
-
-    if(remove(directorioSopa) != 0){
+    printf("%s\n", directorioSopa);
+    if(remove(directorioSopa) != 0)
         printf("Error al borrar la sopa de letras.\n\n");
-    }else{
+    else
+    {
         printf("La sopa de letras se elimino correctamente.\n\n");
-        eraseMap(mapaSopas, sopa->nombreSopa);
+        eraseMap(mapaSopas, nombreSopa);
     }
 }
 
@@ -629,7 +634,7 @@ void mostrarSubmenuCrear(SopaLetras* sopa)
     }
 }
 
-void mostrarSubmenuCargar(SopaLetras* sopa)
+void mostrarSubmenuCargar(SopaLetras* sopa, char *nombreSopa)
 {
     int opcion = 0;
 
@@ -659,7 +664,7 @@ void mostrarSubmenuCargar(SopaLetras* sopa)
             break;
 
             case 3:
-                eliminarSopa(sopa);
+                eliminarSopa(nombreSopa);
                 return;
         }
     }
