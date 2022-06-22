@@ -371,10 +371,13 @@ void cargarDatosSopa(SopaLetras *sopa, FILE *archivo)
     char linea[101];
 
     fgets(linea, 100 * sizeof(char), archivo);
-    fgets(linea, 100 * sizeof(char), archivo);
+    fscanf(archivo, "%[^\n]", linea);
+    fgetc(archivo);
+
     sopa->tamanio = atoi(linea + 8);
 
-    fgets(linea, 100 * sizeof(char), archivo);
+    fscanf(archivo, "%[^\n]", linea);
+    fgetc(archivo);
     sopa->total_palabras = atoi(linea + 22);
 
     fgets(linea, 100 * sizeof(char), archivo);
@@ -384,7 +387,8 @@ void cargarDatosSopa(SopaLetras *sopa, FILE *archivo)
 
     for(int i = 0; i < sopa->total_palabras; i++)
     {
-        fgets(linea, 100 * sizeof(char), archivo);
+        fscanf(archivo, "%[^\n]", linea);
+        fgetc(archivo);
 
         Palabra *palabra = (Palabra *) malloc(sizeof(Palabra));
         palabra->posicion = (Posicion *) malloc(sizeof(Posicion));
@@ -393,6 +397,7 @@ void cargarDatosSopa(SopaLetras *sopa, FILE *archivo)
         palabra->posicion->x = atoi(get_field(linea, 1));
         palabra->posicion->y = atoi(get_field(linea, 2));
         palabra->orientacion = atoi(get_field(linea, 3));
+        palabra->largo = strlen(palabra->palabra);
 
         pushBack(sopa->palabras, palabra);
     }
@@ -425,6 +430,8 @@ void llenarMapaSopas()
         cargarDatosSopa(sopa, archivoSopa);
         strcpy(sopa->nombreSopa, nombreSopa);
         insertMap(mapaSopas, nombreSopa, sopa);
+
+        fgetc(archivoNombres);
     }
 }
 
@@ -510,7 +517,6 @@ void cargarSopa()
     
     auxSopa = pair->value;
 
-    mostrarTablero(auxSopa);
     mostrarSubmenuCargar(auxSopa);
 }
 
@@ -625,10 +631,13 @@ void mostrarSubmenuCrear(SopaLetras* sopa)
 
 void mostrarSubmenuCargar(SopaLetras* sopa)
 {
-   int opcion = 0;
+    int opcion = 0;
 
     while(opcion != 4)
     {
+        if(opcion != 2) mostrarTablero(sopa);
+        printf("\n");
+
         printf("1.- Ver palabras ocultas\n");
         printf("2.- Mostrar soluciones\n");
         printf("3.- Eliminar\n");
@@ -637,6 +646,7 @@ void mostrarSubmenuCargar(SopaLetras* sopa)
         fflush(stdin);
         printf("Ingrese una opción: ");
         scanf("%d", &opcion);
+        printf("\n");
 
         switch (opcion)
         {
@@ -651,10 +661,6 @@ void mostrarSubmenuCargar(SopaLetras* sopa)
             case 3:
                 eliminarSopa(sopa);
                 return;
-            break;
-    
-            default:
-            break;
         }
     }
 }
