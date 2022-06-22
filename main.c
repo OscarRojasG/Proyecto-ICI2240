@@ -423,7 +423,7 @@ void llenarMapaSopas()
 
         SopaLetras *sopa = (SopaLetras *) malloc(sizeof(SopaLetras));
         cargarDatosSopa(sopa, archivoSopa);
-
+        strcpy(sopa->nombreSopa, nombreSopa);
         insertMap(mapaSopas, nombreSopa, sopa);
     }
 }
@@ -581,8 +581,8 @@ void eliminarSopa(SopaLetras* sopa)
         printf("Error al borrar la sopa de letras.\n\n");
     }else{
         printf("La sopa de letras se elimino correctamente.\n\n");
+        eraseMap(mapaSopas, sopa->nombreSopa);
     }
-    eraseMap(mapaSopas, sopa->nombreSopa);
 }
 
 void mostrarSubmenuCrear(SopaLetras* sopa)
