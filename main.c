@@ -19,6 +19,7 @@ void mostrarSubmenuCargar(SopaLetras* sopa, char *nombre);
 
 // Funciones auxiliares
 char *get_field(char *linea, int indice);
+int eliminarDeArchivo(char *nombreSopa, char *directorioSopa);
 void llenarMapaTemas();
 void llenarMapaSopas();
 void cargarDatosSopa(SopaLetras *sopa, FILE *archivo);
@@ -27,6 +28,7 @@ void mostrarDificultades();
 void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioTablero);
 void inicializarSopa(SopaLetras *sopa, FILE *archivoSopa);
 void eliminarEspacios(char *linea);
+void removerPalabra(char * texto, char * palabra);
 List * obtenerPalabrasTema(char *tema);
 List * obtenerPalabrasPersonalizada(int cantPalabras, int tamanio);
 FILE * abrirArchivoTema(char *tema);
@@ -586,8 +588,72 @@ void eliminarSopa(char *nombreSopa)
         printf("Error al borrar la sopa de letras.\n\n");
     else
     {
-        printf("La sopa de letras se elimino correctamente.\n\n");
         eraseMap(mapaSopas, nombreSopa);
+        eliminarDeArchivo(nombreSopa, directorioSopa);
+        printf("La sopa de letras se elimino correctamente.\n\n");
+    }
+}
+
+int eliminarDeArchivo(char *nombreSopa, char *directorioSopa) { 
+    char * nombreArchivo = (char*)malloc(sizeof(char) * 20); 
+    char * texto = (char*)malloc(sizeof(char) * 100); 
+    char * palabraEliminar = (char*)malloc(sizeof(char) * 20);
+
+    strcpy(nombreArchivo, "sopas.txt"); 
+    strcpy(palabraEliminar, nombreSopa); 
+
+    FILE *fp = fopen(nombreArchivo, "r+");
+
+    if (fp == NULL) { 
+        printf("error al leer el archivo %s\n", nombreArchivo); 
+        return -1; 
+    }
+
+    fscanf(fp, "%[^EOF]", texto);
+    fclose(fp);
+
+    fp = fopen(nombreArchivo, "w+");
+
+    removerPalabra(texto, palabraEliminar); 
+
+    fprintf(fp, texto); 
+    fclose(fp);
+
+    free(nombreArchivo);
+    free(texto);
+    free(palabraEliminar);
+
+    return 0; 
+}
+
+void removerPalabra(char * texto, char * palabra) { 
+
+    int size = strlen(palabra); 
+
+    char * ptr = strstr(texto, palabra); 
+
+    if(ptr) { 
+        int pos = (ptr - texto); 
+    
+        ptr = ptr + size;
+        
+        if((*ptr) == '\0'){
+            if(size == strlen(texto)){
+                strcpy(texto, "");
+            }else{
+                texto[pos-1] = '\0'; 
+            }
+        }
+        else{
+            ptr++;
+        
+            int i; 
+
+            for(i = 0; i < strlen(ptr); i++) { 
+                texto[pos + i] = ptr[i]; 
+            }
+            texto[pos + i] = '\0';
+        }
     }
 }
 
