@@ -51,7 +51,7 @@ int main()
     {
         mostrarMenu();
         
-        printf("Ingrese una opción: ");
+        printf("Ingrese una opcion: ");
         fflush(stdin);
         scanf("%d", &opcion);
 
@@ -94,7 +94,7 @@ void llenarMapaTemas()
     if(!archivo)
     {
         printf("Error: Archivo temas.txt no encontrado.\n");
-        printf("Saliendo de la aplicación...");
+        printf("Saliendo de la aplicacion...");
         exit(EXIT_FAILURE);
     }
 
@@ -162,7 +162,7 @@ List * obtenerPalabrasPersonalizada(int cantPalabras, int largoMax)
             scanf("%[^\n]", palabra);
 
             if((int)strlen(palabra) <= largoMax) break;
-            printf("Error: Las palabras no pueden tener más de %d letras.\n", largoMax);
+            printf("Error: Las palabras no pueden tener mas de %d letras.\n", largoMax);
         }
 
         char *dynchar = strdup(palabra);
@@ -187,7 +187,7 @@ List * obtenerPalabrasTema(char *tema)
     FILE *archivo = abrirArchivoTema(tema);
     if(!archivo)
     {
-        printf("Error: Ocurrió un error al cargar la lista de palabras.\n\n");
+        printf("Error: Ocurrio un error al cargar la lista de palabras.\n\n");
         return NULL;
     }
 
@@ -273,11 +273,6 @@ void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioT
     }
 }
 
-void inicializarSopa(SopaLetras *sopa, FILE *archivoSopa)
-{
-
-}
-
 void crearSopaTematica()
 {
     char tema[20];
@@ -297,7 +292,7 @@ void crearSopaTematica()
     while(cantidadPalabras == -1)
     {
         mostrarDificultades();
-        printf("Ingrese el número de la dificultad: ");
+        printf("Ingrese el numero de la dificultad: ");
         fflush(stdin);
         scanf("%d", &dificultad);
         obtenerDatosDificultad(dificultad, &cantidadPalabras, &tamanioTablero);
@@ -309,7 +304,7 @@ void crearSopaTematica()
     SopaLetras *sopa = crearSopaLetras(palabrasSopa, tamanioTablero);
 
     if(sopa == NULL)
-        printf("Ocurrió un error al generar la sopa de letras. Inténtalo de nuevo.\n\n");
+        printf("Ocurrio un error al generar la sopa de letras. Intentalo de nuevo.\n\n");
     else
         mostrarSubmenuCrear(sopa);
 }
@@ -325,12 +320,12 @@ void crearSopaPersonalizada()
 
     while(1)
     {
-        printf("Ingrese el tamaño del tablero: ");
+        printf("Ingrese el tamano del tablero: ");
         fflush(stdin);
         scanf("%d", &tamanioTablero);
 
         if(tamanioTablero >= 5 && tamanioTablero <= 25) break;
-        printf("Error: El tamaño del tablero debe estar entre 5 y 25.\n");
+        printf("Error: El tamano del tablero debe estar entre 5 y 25.\n");
     }
 
     List *palabrasSopa = obtenerPalabrasPersonalizada(cantidadPalabras, tamanioTablero);
@@ -339,7 +334,7 @@ void crearSopaPersonalizada()
     SopaLetras *sopa = crearSopaLetras(palabrasSopa, tamanioTablero);
 
     if(sopa == NULL)
-        printf("Ocurrió un error al generar la sopa de letras. Inténtalo de nuevo.\n\n");
+        printf("Ocurrio un error al generar la sopa de letras. Intentalo de nuevo.\n\n");
     else
         mostrarSubmenuCrear(sopa);
 }
@@ -447,7 +442,7 @@ void mostrarSopas()
         return;
     }
 
-    printf("%-15s %-25s %s\n", "Nombre", "Cantidad de palabras", "Tamaño del tablero");
+    printf("%-15s %-25s %s\n", "Nombre", "Cantidad de palabras", "Tamano del tablero");
 
     while(pair)
     {
@@ -547,7 +542,7 @@ void exportarSopa(SopaLetras* sopa)
     archivoSopa = fopen(directorio, "wt");
 
     fprintf(archivoSopa, "Nombre/tema: %s\n", nombreSopa);
-    fprintf(archivoSopa, "Tamaño: %d\n", sopa->tamanio);
+    fprintf(archivoSopa, "Tamano: %d\n", sopa->tamanio);
     fprintf(archivoSopa, "Cantidad de palabras: %d\n", sopa->total_palabras);
 
     fprintf(archivoSopa, "\nLista de palabras:\n");
@@ -612,7 +607,7 @@ void mostrarSubmenuCrear(SopaLetras* sopa)
         printf("4.- Salir\n\n");
 
         fflush(stdin);
-        printf("Ingrese una opción: ");
+        printf("Ingrese una opcion: ");
         scanf("%d", &opcion);
         printf("\n");
 
@@ -649,7 +644,7 @@ void mostrarSubmenuCargar(SopaLetras* sopa, char *nombreSopa)
         printf("4.- Salir\n\n");
 
         fflush(stdin);
-        printf("Ingrese una opción: ");
+        printf("Ingrese una opcion: ");
         scanf("%d", &opcion);
         printf("\n");
 
