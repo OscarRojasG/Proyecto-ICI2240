@@ -11,7 +11,7 @@ tijereta
 cucaracha
 mantis
 hormiga
-araña
+arana
 pulga
 mosca
 escorpion

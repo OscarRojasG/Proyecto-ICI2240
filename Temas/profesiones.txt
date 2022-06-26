@@ -8,7 +8,7 @@ medico
 actor
 autor
 diseñador
-albañil
+albanil
 pintor
 carnicero
 carpintero

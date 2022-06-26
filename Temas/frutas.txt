@@ -6,7 +6,7 @@ mandarina
 naranja
 pomelo
 melon
-sandía
+sandia
 mango
 papaya
 piña
@@ -20,7 +20,7 @@ pera
 uva
 higo
 almendra
-castaña
+castana
 cacahuete
 nuez
 avellana
