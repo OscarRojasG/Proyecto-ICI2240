@@ -2,7 +2,6 @@ animales
 paises
 colores
 capitales
-ciudades
 flores
 inventos
 deportes
