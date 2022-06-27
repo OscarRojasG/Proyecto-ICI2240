@@ -69,9 +69,43 @@ List * obtenerPosiciones(SopaLetras *sopa, List *listaPalabras)
     return listaPosiciones;
 }
 
+void ordenarPalabrasPorLargo(List *listaPalabras)
+{
+    int tamanio = getSize(listaPalabras);
+    char **tmp = (char **) malloc(tamanio * sizeof(char *));
+    char *palabra;
+
+    int i = 0;
+    while((palabra = popFront(listaPalabras)) != NULL)
+    {
+        tmp[i] = palabra;
+        i++;
+    }
+
+    qsort(tmp, tamanio, sizeof(char *), cmp);
+
+    for(int i = 0; i < tamanio; i++)
+        pushBack(listaPalabras, tmp[i]);
+
+    free(tmp);
+}
+
+int cmp(const void * a, const void * b)
+{
+    char *p1 = *((char **) a);
+    char *p2 = *((char **) b);
+    int size_p1 = strlen(p1);
+    int size_p2 = strlen(p2);
+    if(size_p1 > size_p2) return -1;
+    if(size_p1 < size_p2) return 1;
+    return 0;
+}
+
 int insertarPalabras(SopaLetras *sopa, List *palabras)
 {
     GraphNode *inicial, *final;
+    ordenarPalabrasPorLargo(palabras);
+
     for(int i = 0; i < 1000; i++)
     {
         List *posiciones = obtenerPosiciones(sopa, palabras);

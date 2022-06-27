@@ -33,6 +33,10 @@ char ** inicializarTablero(int tamanio);
 
 List * obtenerPosiciones(SopaLetras *sopa, List *listaPalabras);
 
+void ordenarPalabrasPorLargo(List *listaPalabras);
+
+int cmp(const void * a, const void * b);
+
 int insertarPalabras(SopaLetras *sopa, List *listaPalabras);
 
 void llenarTablero(SopaLetras *sopa);
