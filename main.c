@@ -49,7 +49,7 @@ int main()
     llenarMapaTemas();
     llenarMapaSopas();
 
-    srand(time(NULL)); // Hace que las sopas de letras generadas no se repitan en cada ejecución
+    srand(time(NULL)); // Cambia la semilla de generación de números aleatorios
 
     int opcion = 0;
     while(opcion != 5)
@@ -83,6 +83,7 @@ int main()
     return 0;
 }
 
+/* Imprime el menú principal por pantalla */
 void mostrarMenu()
 {
     printf("1.- Crear sopa de letras tematica\n");
@@ -93,6 +94,7 @@ void mostrarMenu()
     printf("\n");
 }
 
+/* Guarda el nombre de los temas en el mapa respectivo a partir del archivo temas.txt */
 void llenarMapaTemas()
 {
     FILE *archivo = fopen("temas.txt", "r");
@@ -112,6 +114,7 @@ void llenarMapaTemas()
     }
 }
 
+/* Imprime los temas por pantalla */
 void mostrarTemas()
 {
     Pair *pair = firstMap(mapaTemas);
@@ -128,6 +131,7 @@ void mostrarTemas()
     printf("\n");
 }
 
+/* Lee y retorna la lista de palabras de un tema */
 List * leerPalabrasArchivo(FILE *archivo)
 {
     List *list = createList();
@@ -141,6 +145,7 @@ List * leerPalabrasArchivo(FILE *archivo)
     return list;
 }
 
+/* Abre el archivo de un tema en específico */
 FILE * abrirArchivoTema(char *tema)
 {
     char directorio[30];
@@ -152,6 +157,7 @@ FILE * abrirArchivoTema(char *tema)
     return archivo;
 }
 
+/* Lee y retorna las palabras ingresadas por el usuario para generar una sopa personalizada */
 List * obtenerPalabrasPersonalizada(int cantPalabras, int largoMax)
 {
     List* palabras = createList();
@@ -178,6 +184,10 @@ List * obtenerPalabrasPersonalizada(int cantPalabras, int largoMax)
     return palabras;
 }
 
+/* Retorna la lista de palabras de un tema en específico. Si las palabras
+ * no han sido cargadas previamente, lee el archivo del tema correspondiente
+ * y guarda la lista de palabras en el mapa.
+ */
 List * obtenerPalabrasTema(char *tema)
 {
     Pair *pair = searchMap(mapaTemas, tema);
@@ -187,7 +197,7 @@ List * obtenerPalabrasTema(char *tema)
         return NULL;
     }
 
-    if(pair->value) return (List *) pair->value;
+    if(pair->value) return (List *) pair->value; // Palabras previamente cargadas
 
     FILE *archivo = abrirArchivoTema(tema);
     if(!archivo)
@@ -197,12 +207,13 @@ List * obtenerPalabrasTema(char *tema)
     }
 
     List *palabrasTema = leerPalabrasArchivo(archivo);
-    pair->value = palabrasTema;
+    pair->value = palabrasTema; // Se guarda la lista de palabras en el mapa
     fclose(archivo);
     
     return palabrasTema;
 }
 
+/* Retorna una lista con las palabras que no superen un largo determinado */
 List * obtenerPalabrasValidas(List *list, int largoMax)
 {
     List *new = createList();
@@ -217,28 +228,33 @@ List * obtenerPalabrasValidas(List *list, int largoMax)
     return new;
 }
 
+/* Retorna una cierta cantidad de palabras aleatorias de una lista.
+ * Por ejemplo, si se quiere obtener la mitad de elementos de forma aleatoria,
+ * por cada elemento se generan ceros y unos con la función rand, y se retornan
+ * todos los elementos cuyo número sea cero.
+ */
 List * obtenerPalabrasAleatorias(List * list, int numPalabras)
 {
     if(numPalabras >= getSize(list))
         return list;
 
     List *new = createList();
-    int max_rand = getSize(list) / numPalabras;
-    if((getSize(list) % numPalabras) == 0)
-        max_rand -= 1;
+    int max_rand = getSize(list) / numPalabras; // Número máximo para generar de forma aleatoria
+    if((getSize(list) % numPalabras) != 0)
+        max_rand += 1; // Se suma 1 a max_rand cuando la división no es exacta
 
-    int *posicionesInvalidas = (int *) calloc(getSize(list), sizeof(int));
+    int *posicionesInvalidas = (int *) calloc(getSize(list), sizeof(int)); // Elementos ya guardados
 
     while(getSize(new) < numPalabras) {
         void *data = firstList(list);
-        int pos = 0;
+        int pos = 0; // Posición de los elementos en la lista
 
         while(data && (getSize(new) < numPalabras)) {
             int r = rand() % max_rand;
             if(r == 0 && posicionesInvalidas[pos] == 0)
             {
-                pushBack(new, data);
-                posicionesInvalidas[pos] = 1;
+                pushBack(new, data); // Se agrega el elemento a la lista
+                posicionesInvalidas[pos] = 1; // Se marca la posición del elemento como inválida
             }
             data = nextList(list);
             pos++;
@@ -249,6 +265,7 @@ List * obtenerPalabrasAleatorias(List * list, int numPalabras)
     return new;
 }
 
+/* Imprime por pantalla la información de cada dificultad de la sopa de letras */
 void mostrarDificultades()
 {
     printf("\n");
@@ -259,6 +276,7 @@ void mostrarDificultades()
     printf("\n");
 }
 
+/* Retorna los datos necesarios para generar la sopa de letras según la dificultad */
 void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioTablero)
 {
     switch(dificultad)
@@ -278,6 +296,7 @@ void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioT
     }
 }
 
+/* Crea una sopa de letras a partir de un tema y muestra el submenú de la sopa generada */
 void crearSopaTematica()
 {
     char tema[20];
@@ -314,6 +333,7 @@ void crearSopaTematica()
         mostrarSubmenuCrear(sopa);
 }
 
+/* Crea una sopa de letras personalizada y muestra el submenú de la sopa generada */
 void crearSopaPersonalizada()
 {
     int cantidadPalabras;
@@ -344,6 +364,7 @@ void crearSopaPersonalizada()
         mostrarSubmenuCrear(sopa);
 }
 
+/* Abre el archivo de una sopa previamente guardada por el usuario */
 FILE * abrirArchivoSopa(char *nombre)
 {
     char directorio[30];
@@ -355,6 +376,7 @@ FILE * abrirArchivoSopa(char *nombre)
     return archivo;
 }
 
+/* Elimina los espacios del tablero cuando se lee desde un archivo */
 void eliminarEspacios(char *linea)
 {
     for (int i = 0; i <= strlen(linea); i++)
@@ -367,6 +389,7 @@ void eliminarEspacios(char *linea)
     }
 }
 
+/* Carga la información de las sopas previamente guardadas por el usuario */
 void cargarDatosSopa(SopaLetras *sopa, FILE *archivo)
 {
     char linea[101];
@@ -416,6 +439,7 @@ void cargarDatosSopa(SopaLetras *sopa, FILE *archivo)
     }
 }
 
+/* Guarda la información de las sopas guardadas en el mapa respectivo */
 void llenarMapaSopas()
 {
     FILE *archivoNombres = fopen("sopas.txt", "r");
@@ -438,6 +462,7 @@ void llenarMapaSopas()
     fclose(archivoNombres);
 }
 
+/* Muestra la información de las sopas previamente guardadas */
 void mostrarSopas()
 {
     Pair *pair = firstMap(mapaSopas);
@@ -458,6 +483,7 @@ void mostrarSopas()
     printf("\n");
 }
 
+/* Lee campos separados por coma dentro de un archivo */
 char *get_field(char *linea, int indice)
 {
     char *campo = (char *) malloc(100 * sizeof(char *)); // Guarda el string a retornar
@@ -500,9 +526,10 @@ char *get_field(char *linea, int indice)
     return NULL;
 }
 
+/* Carga una sopa previamente guardada y muestra el submenú correspondiente */
 void cargarSopa()
 {
-    char nombreSopa [20];
+    char nombreSopa[20];
     Pair *pair;
     SopaLetras *auxSopa;
 
@@ -513,7 +540,8 @@ void cargarSopa()
 
     pair = searchMap(mapaSopas, nombreSopa);
 
-    if(pair == NULL){
+    if(pair == NULL)
+    {
         printf("No se encontraron sopas con el nombre ingresado.\n\n");
         return;
     }
@@ -523,6 +551,7 @@ void cargarSopa()
     mostrarSubmenuCargar(auxSopa, nombreSopa);
 }
 
+/* Guarda una sopa generada por el usuario */
 void exportarSopa(SopaLetras* sopa)
 {
     char directorio[50];
@@ -579,6 +608,7 @@ void exportarSopa(SopaLetras* sopa)
     printf("La sopa fue guardada en %s\n\n", directorio);
 }
 
+/* Elimina una sopa previamente guardada por el usuario */
 void eliminarSopa(char *nombreSopa)
 {
     char directorioSopa[50];
@@ -597,17 +627,19 @@ void eliminarSopa(char *nombreSopa)
     }
 }
 
+/* Remueve el nombre de la sopa eliminada del archivo sopas.txt */
 int eliminarDeArchivo(char *nombreSopa, char *directorioSopa) { 
-    char * nombreArchivo = (char*)malloc(sizeof(char) * 20); 
-    char * texto = (char*)malloc(sizeof(char) * 100); 
-    char * palabraEliminar = (char*)malloc(sizeof(char) * 20);
+    char *nombreArchivo = (char *) malloc(sizeof(char) * 20); 
+    char *texto = (char *) malloc(sizeof(char) * 200); 
+    char *palabraEliminar = (char *) malloc(sizeof(char) * 20);
 
     strcpy(nombreArchivo, "sopas.txt"); 
     strcpy(palabraEliminar, nombreSopa); 
 
     FILE *fp = fopen(nombreArchivo, "r+");
 
-    if (fp == NULL) { 
+    if (fp == NULL)
+    { 
         printf("error al leer el archivo %s\n", nombreArchivo); 
         return -1; 
     }
@@ -629,25 +661,26 @@ int eliminarDeArchivo(char *nombreSopa, char *directorioSopa) {
     return 0; 
 }
 
-void removerPalabra(char * texto, char * palabra) { 
+/* Elimina una palabra de un string y lo retorna */
+void removerPalabra(char *texto, char *palabra) { 
 
     int size = strlen(palabra); 
 
-    char * ptr = strstr(texto, palabra); 
+    char *ptr = strstr(texto, palabra); 
 
     if(ptr) { 
         int pos = (ptr - texto); 
     
         ptr = ptr + size;
         
-        if((*ptr) == '\0'){
-            if(size == strlen(texto)){
+        if((*ptr) == '\0') {
+            if(size == strlen(texto)) {
                 strcpy(texto, "");
-            }else{
+            } else {
                 texto[pos-1] = '\0'; 
             }
         }
-        else{
+        else {
             ptr++;
         
             int i; 
@@ -660,6 +693,7 @@ void removerPalabra(char * texto, char * palabra) {
     }
 }
 
+/* Imprime por pantalla el submenú cuando se crea una sopa de letras */
 void mostrarSubmenuCrear(SopaLetras* sopa)
 {
     int opcion = 0;
@@ -698,6 +732,7 @@ void mostrarSubmenuCrear(SopaLetras* sopa)
     }
 }
 
+/* Imprime por pantalla el submenú cuando se carga una sopa previamente guardada */
 void mostrarSubmenuCargar(SopaLetras* sopa, char *nombreSopa)
 {
     int opcion = 0;
