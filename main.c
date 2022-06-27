@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 #include "list.h"
 #include "soup.h"
 #include "hashmap.h"
@@ -47,6 +48,8 @@ int main()
     mapaSopas = createMap(10);
     llenarMapaTemas();
     llenarMapaSopas();
+
+    srand(time(NULL)); // Hace que las sopas de letras generadas no se repitan en cada ejecución
 
     int opcion = 0;
     while(opcion != 5)
