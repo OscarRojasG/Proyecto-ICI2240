@@ -349,8 +349,8 @@ void crearSopaPersonalizada()
         fflush(stdin);
         scanf("%d", &tamanioTablero);
 
-        if(tamanioTablero >= 5 && tamanioTablero <= 25) break;
-        printf("Error: El tamano del tablero debe estar entre 5 y 25.\n");
+        if(tamanioTablero >= 5 && tamanioTablero <= 20) break;
+        printf("Error: El tamano del tablero debe estar entre 5 y 20.\n");
     }
 
     List *palabrasSopa = obtenerPalabrasPersonalizada(cantidadPalabras, tamanioTablero);
