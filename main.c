@@ -140,8 +140,10 @@ List * leerPalabrasArchivo(FILE *archivo)
 {
     List *list = createList();
     char palabra[20];
+    // Leemos todas las líneas del archivo
     while(fscanf(archivo, "%[^\n]", palabra) != EOF)
     {
+        // Insertamos cada palabra en una lista
         char *dynchar = strdup(palabra);
         pushBack(list, dynchar);
         fgetc(archivo);
@@ -217,7 +219,8 @@ List * obtenerPalabrasTema(char *tema)
     return palabrasTema;
 }
 
-/* Retorna una lista con las palabras que no superen un largo determinado */
+/* Retorna una lista con las palabras que no superen un largo determinado
+   puesto que sería imposible insertar palabras muy grandes en las sopas mas pequeñas*/
 List * obtenerPalabrasValidas(List *list, int largoMax)
 {
     List *new = createList();
@@ -303,11 +306,13 @@ void obtenerDatosDificultad(int dificultad, int *cantidadPalabras, int *tamanioT
 /* Crea una sopa de letras a partir de un tema y muestra el submenú de la sopa generada */
 void crearSopaTematica()
 {
+    // Inicializamos variables
     char tema[20];
     int dificultad;
     int cantidadPalabras = -1;
     int tamanioTablero = -1;
 
+    // Imprimimos temas disponibles
     mostrarTemas();
 
     printf("Ingrese el nombre del tema: ");
@@ -317,6 +322,7 @@ void crearSopaTematica()
     List *palabrasTema = obtenerPalabrasTema(tema);
     if(!palabrasTema) return;
 
+    // Leemos dificultad hasta obtener un numero válido
     while(cantidadPalabras == -1)
     {
         mostrarDificultades();
@@ -326,9 +332,11 @@ void crearSopaTematica()
         obtenerDatosDificultad(dificultad, &cantidadPalabras, &tamanioTablero);
     }
 
+    // Obtenemos las palabras a insertar en la sopa
     List *palabrasValidas = obtenerPalabrasValidas(palabrasTema, tamanioTablero);
     List *palabrasSopa = obtenerPalabrasAleatorias(palabrasValidas, cantidadPalabras);
 
+    // Creamos la sopa de letras usando el algoritmo DFS 
     SopaLetras *sopa = crearSopaLetras(palabrasSopa, tamanioTablero);
 
     if(sopa == NULL)
