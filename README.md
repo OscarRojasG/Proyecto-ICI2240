@@ -10,6 +10,6 @@ La aplicación debe ser ejecutada desde un terminal PowerShell con el comando `.
 ### Error de Secuencias de Escape
 La aplicación podría presentar el siguiente error al mostrar las soluciones:
 
-![Error Secuencias de Escape](//i.imgur.com/Xw0PWGd_d.webp?maxwidth=760&fidelity=grand)
+![Error Secuencias de Escape](https://i.imgur.com/Xw0PWGd_d.webp?maxwidth=760&fidelity=grand)
 
 ##### Para solucionar este error incluímos una guía, revisar el archivo `fix colores consola.pdf`
