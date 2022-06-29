@@ -44,6 +44,7 @@ HashMap * mapaSopas;
 
 int main()
 {
+    // Inicializamos los mapas y los llenamos
     mapaTemas = createMap(10);
     mapaSopas = createMap(10);
     llenarMapaTemas();
@@ -106,8 +107,10 @@ void llenarMapaTemas()
     }
 
     char tema[30];
+    // Leemos el archivo línea a línea
     while(fscanf(archivo, "%[^\n]", tema) != EOF)
     {
+        // Insertamos cada tema al mapa usando su nombre como clave
         char *dynchar = strdup(tema);
         insertMap(mapaTemas, dynchar, NULL);
         fgetc(archivo);
@@ -121,6 +124,7 @@ void mostrarTemas()
     char *tema = NULL;
     int num = 1;
 
+    // Iteramos y recorremos todo el mapa de temas
     while(pair)
     {
         tema = pair->key;
@@ -306,7 +310,7 @@ void crearSopaTematica()
 
     mostrarTemas();
 
-    printf("Ingrese un tema: ");
+    printf("Ingrese el nombre del tema: ");
     fflush(stdin);
     scanf("%[^\n]", tema);
 
@@ -561,6 +565,8 @@ void exportarSopa(SopaLetras* sopa)
     fflush(stdin); 
     scanf("%[^\n]", nombreSopa);
 
+    // Abrimos el archivo sopas.txt, este nos sirve para mantener un registro de las sopas personalizadas
+    // Luego escribimos el nombre del nuevo tema
     FILE *archivoNombres = fopen("sopas.txt", "a");
     fseek(archivoNombres, 0, SEEK_END);
     if(ftell(archivoNombres) != 0)
@@ -572,24 +578,28 @@ void exportarSopa(SopaLetras* sopa)
     strcat(directorio, nombreSopa);
     strcat(directorio, ".txt");
 
+    // Abrimos y creamos el nuevo archivo
     FILE* archivoSopa;
     archivoSopa = fopen(directorio, "wt");
 
+    // Imprimimos los datos de la sopa
     fprintf(archivoSopa, "Nombre/tema: %s\n", nombreSopa);
     fprintf(archivoSopa, "Tamano: %d\n", sopa->tamanio);
     fprintf(archivoSopa, "Cantidad de palabras: %d\n", sopa->total_palabras);
 
     fprintf(archivoSopa, "\nLista de palabras:\n");
 
+    // Imprimimos todas las palabras de la sopa
+    // Tambien su posición (x,y) y orientación
     Palabra *auxPalabra;
     auxPalabra = firstList(sopa->palabras);
-
     while(auxPalabra)
     {
         fprintf(archivoSopa, "%s,%d,%d,%d\n", auxPalabra->palabra, auxPalabra->posicion->x, auxPalabra->posicion->y, auxPalabra->orientacion);
         auxPalabra = nextList(sopa->palabras);
     }
 
+    // Imprimimos la matriz de caracteres
     fprintf(archivoSopa, "\nTablero:\n");
 
     for (int i = 0; i < sopa->tamanio; i++)
@@ -601,6 +611,7 @@ void exportarSopa(SopaLetras* sopa)
         fprintf(archivoSopa, "\n");
     }
 
+    // Insertamos la nueva sopa creada al mapaSopas
     insertMap(mapaSopas, nombreSopa, sopa);
 
     fclose(archivoSopa);
@@ -613,6 +624,7 @@ void eliminarSopa(char *nombreSopa)
 {
     char directorioSopa[50];
 
+    // Abrimos el directorio de la sopa a eliminar y eliminamos usando remove()
     strcpy(directorioSopa, "SopasPersonalizadas/");
     strcat(directorioSopa, nombreSopa);
     strcat(directorioSopa, ".txt");
@@ -621,8 +633,8 @@ void eliminarSopa(char *nombreSopa)
         printf("Error al borrar la sopa de letras.\n\n");
     else
     {
-        eraseMap(mapaSopas, nombreSopa);
-        eliminarDeArchivo(nombreSopa, directorioSopa);
+        eraseMap(mapaSopas, nombreSopa); // Eliminamos la sopa del mapa
+        eliminarDeArchivo(nombreSopa, directorioSopa); // Eliminamos la sopa del índice de sopas personalizadas
         printf("La sopa de letras se elimino correctamente.\n\n");
     }
 }
